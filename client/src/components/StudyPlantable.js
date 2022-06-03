@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Table, Accordion } from 'react-bootstrap';
+import { Table, Container } from 'react-bootstrap';
 
 
 function StudyPlanTable(props) {
     return (
         <>
+
             <Table striped bordered hover size="sm">
                 <thead>
                     <tr>
@@ -20,6 +21,7 @@ function StudyPlanTable(props) {
                     <TableRow key={1} />
                 </tbody>
             </Table>
+
         </>
     );
 }
@@ -40,18 +42,22 @@ function TableRow(props) {
             {collapsed ? '' :
                 <tr>
                     <td colSpan={5}>
-                        <Table striped bordered hover size="sm">
+                        <table className='table table-borderless' size="sm">
                             <thead>
                                 <tr>
                                     <th>Incompatible courses</th>
                                     <th>Mandatory courses</th>
                                 </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td> YYYYYYY</td>
                                     <td> ZZZZZZZ</td>
                                 </tr>
-                            </thead>
-                        </Table>
+                            </tbody>
+
+
+                        </table>
                     </td>
                 </tr>
             }
