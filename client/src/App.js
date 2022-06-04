@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { LoginRoute } from './components/Authentication';
-import StudyPlanTable from './components/StudyPlantable';
 import { useState } from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
-import { Container } from 'react-bootstrap'
+import LoggedInView from './components/LoggedInView';
+import NotLoggedInView from './components/NotLoggedInView';
 
 function App() {
 	const [loading, setLoading] = useState(true);
@@ -23,14 +23,9 @@ function App() {
 					<Route path='/' element={<Layout />}>
 						<Route path='' element={
 							loggedIn ?
-								<>
-								</> :
-								<>
-									<Container fluid>
-										<h1>Polito study plan</h1>
-										<StudyPlanTable />
-									</Container>
-								</>
+								<LoggedInView />
+								:
+								<NotLoggedInView />
 						} />
 					</Route>
 
