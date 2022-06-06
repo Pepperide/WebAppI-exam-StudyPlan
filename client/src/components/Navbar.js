@@ -1,6 +1,8 @@
 import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import './css/Navbar.css'
+import './css/Navbar.css';
+import UserContext from '../UserContext';
+import { useContext } from 'react';
 const politoLogo = require('../data/logo_poli_bianco_260.png')
 
 function Titlebar(props) {
@@ -18,6 +20,7 @@ function Titlebar(props) {
 
 function NavBar(props) {
     const navigate = useNavigate();
+    const user = useContext(UserContext);
 
     const handleNavigation = (path) => {
         navigate(path);
@@ -31,28 +34,45 @@ function NavBar(props) {
                 </Row>
                 <Row>
                     <Navbar bg="dark" variant="dark">
-                        <Container className='d-flex justify-content-center'>
-                            <Nav className="me-auto ">
-                                <Nav.Item as="li">
-                                    <Nav.Link onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item as="li">
-                                    <Nav.Link onClick={() => { }}>Actions</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item as="li">
-                                    <Nav.Link onClick={() => { }}>Contacts</Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </Container>
-                        <Nav className="me-auto">
-                            <Nav.Item as="li">
+
+                        <Col xs={9}>
+                            <Container className='d-flex justify-content-center'>
+                                <Nav className="me-auto ">
+                                    <Nav.Item as="li">
+                                        <Nav.Link onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item as="li">
+                                        <Nav.Link onClick={() => { }}>Actions</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item as="li">
+                                        <Nav.Link onClick={() => { }}>Contacts</Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
+                            </Container>
+                        </Col>
+                        <Col xs={3}>
+                            <Container className='d-flex justify-content-end'>
                                 {props.loggedIn ?
-                                    <Nav.Link onClick={() => props.handleLogout()}>Logout</Nav.Link> :
-                                    <Nav.Link onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
-                                }
-                            </Nav.Item>
-                        </Nav>
-                        <i id="loginLogo" className="bi bi-person-circle d-flex justify-content-end"></i>
+                                    <Nav className="me-auto">
+                                        <Nav.Item as="li">
+                                            <Nav.Link>{user.name} {user.surname}</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item as="li">
+                                            <Nav.Link onClick={() => props.handleLogout()}> Logout</Nav.Link>
+                                        </Nav.Item>
+
+                                    </Nav>
+                                    :
+                                    <Nav>
+                                        <Nav.Item as="li">
+                                            <Nav.Link onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
+                                        </Nav.Item>
+
+                                    </Nav>}
+                                <i id="loginLogo" className="bi bi-person-circle d-flex align-self-center"></i>
+                            </Container>
+
+                        </Col>
                     </Navbar>
                 </Row>
             </Row>

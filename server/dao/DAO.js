@@ -8,11 +8,30 @@ class DAO {
         });
     }
 
-    setTriggers() {
+    dropTables(tables) {
         return new Promise((resolve, reject) => {
-            const data_triggers = this.fs.readFileSync('./dao/triggers.sql').toString();
-            const triggers = data_triggers.split('END;');
+            this.db.serialize(() => {
+                this.db.run("PRAGMA foreign_keys=OFF;");
+                this.db.run("BEGIN TRANSACTION;");
+                tables.forEach((q) => {
+                    if (q) {
+                        q += ";";
+                        this.db.run(q, (err) => {
+                            if (err) {
+                                console.log(err);
+                                reject(err);
+                            }
+                        });
+                    }
+                });
+                this.db.run("COMMIT;");
+            });
+            resolve(true);
+        });
+    }
 
+    setTriggers(triggers) {
+        return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 triggers.forEach((t) => {
                     if (t) {
@@ -31,21 +50,11 @@ class DAO {
         });
     }
 
-    createDB() {
+    createTables(tables) {
         return new Promise((resolve, reject) => {
-            const data_tables = this.fs.readFileSync('./dao/createTables.sql').toString();
-            const data_triggers = this.fs.readFileSync('./dao/triggers.sql').toString();
-            const tables = data_tables.split(';');
-            const triggers = data_triggers.split('END;');
-
             this.db.serialize(() => {
                 this.db.run("PRAGMA foreign_keys=OFF;");
                 this.db.run("BEGIN TRANSACTION;");
-                this.db.run('DROP TABLE COURSE', (err) => { if (err) reject(err) });
-                this.db.run('DROP TABLE ENROLLED_STUDENTS', (err) => { if (err) reject(err) });
-                this.db.run('DROP TABLE INCOMPATIBLE_COURSES', (err) => { if (err) reject(err) });
-                this.db.run('DROP TABLE STUDENT', (err) => { if (err) reject(err) });
-                this.db.run('DROP TABLE USER', (err) => { if (err) reject(err) });
                 tables.forEach((q) => {
                     if (q) {
                         q += ";";
@@ -63,15 +72,11 @@ class DAO {
         });
     }
 
-    populateDB() {
+    populateDB(queries) {
         return new Promise((resolve, reject) => {
-            const data = this.fs.readFileSync('./dao/populateDB.sql').toString();
-            const queries = data.split(';');
-
             this.db.serialize(() => {
                 this.db.run("PRAGMA foreign_keys=OFF;");
                 this.db.run("BEGIN TRANSACTION;");
-
                 queries.forEach((q) => {
                     if (q) {
                         q += ";";
@@ -108,6 +113,37 @@ class DAO {
                             resolve(user);
                     });
                 }
+            });
+        });
+    }
+
+    getCourses() {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   SELECT *
+                    FROM COURSE C
+                    WHERE C.code;`;
+
+            this.db.all(sql, (err, rows) => {
+                if (err)
+                    reject(err);
+                resolve(rows);
+            });
+        });
+
+    }
+
+    getIncompatibleCourses() {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   SELECT *
+                    FROM COURSE C, INCOMPATIBLE_COURSES I
+                    WHERE C.code=I.courseCode;`
+
+            this.db.all(sql, (err, rows) => {
+                if (err)
+                    reject(err);
+                resolve(rows);
             });
         });
     }

@@ -31,7 +31,34 @@ async function logout() {
     }
 }
 
+async function getCourses() {
+    const url = APIURL + '/courses';
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const list = await response.json('');
+            return list;
+        }
+        else {
+            console.log(response.statusText);
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+
+}
+
 export {
     login,
-    logout
+    logout,
+    getCourses
 }

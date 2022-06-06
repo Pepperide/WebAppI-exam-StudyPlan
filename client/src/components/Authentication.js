@@ -1,7 +1,7 @@
 import { Form, Button, Col, Row, Container, Alert } from 'react-bootstrap'
 import './css/Authentication.css'
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const logo = require('../data/Logo_PoliTo_dal_2021_blu.png')
 
 function LoginRoute(props) {
@@ -16,7 +16,7 @@ function LoginRoute(props) {
                         <img id="loginLogoPolito" src={logo} />
                     </Col>
                     <Col className="d-flex justify-content-center">
-                        <LoginForm userLoginCallback={props.userLoginCallback} />
+                        <LoginForm userLoginCallback={props.userLoginCallback} loggedIn={props.loggedIn} />
                     </Col>
                 </Row>
             </div>
@@ -28,6 +28,11 @@ function LoginForm(props) {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (props.loggedIn)
+            navigate('/');
+    }, [props.loggedIn]);
+
     const handleNavigation = (path) => {
         navigate(path);
     }
@@ -37,7 +42,6 @@ function LoginForm(props) {
         //TODO validate form
         const credentials = { username, password };
         props.userLoginCallback(credentials);
-        navigate('/');
     }
 
     return (

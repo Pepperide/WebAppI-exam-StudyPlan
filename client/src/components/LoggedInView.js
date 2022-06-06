@@ -1,5 +1,5 @@
 import { Container, Row, Col, Alert } from 'react-bootstrap'
-import StudyPlanTable from './StudyPlantable';
+import StudyPlanTable from './StudyPlanTable';
 function LoggedInView(props) {
     return (
         <>

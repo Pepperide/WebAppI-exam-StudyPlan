@@ -1,0 +1,30 @@
+.main-table {
+    border-collapse: separate;
+    border-spacing: 0 4px;
+
+}
+
+.table-row-main {
+    background-color: #97adbe !important;
+}
+
+.table-row-main.open {
+    background-color: #4b82af !important;
+}
+
+td:first-child.table-row-main {
+    border-top-left-radius: 100px !important;
+    border-bottom-left-radius: 100px !important;
+}
+
+td:last-child.table-row-main {
+    border-top-right-radius: 100px !important;
+    border-bottom-right-radius: 100px !important;
+}
+
+.hidden-table {
+    background-color: #4b82af !important;
+    border-radius: 100px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
