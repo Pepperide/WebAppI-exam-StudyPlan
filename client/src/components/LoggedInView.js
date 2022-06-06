@@ -1,9 +1,12 @@
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Alert } from 'react-bootstrap'
 import StudyPlanTable from './StudyPlantable';
 function LoggedInView(props) {
     return (
         <>
             <Container fluid>
+                {props.message && <Row>
+                    <Alert variant={props.message.type} onClose={() => props.setMessage('')} dismissible>{props.message.msg}</Alert>
+                </Row>}
                 <Row>
                     <Col>
                         <h1>Polito study plan</h1>

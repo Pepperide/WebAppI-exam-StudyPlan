@@ -46,7 +46,10 @@ function NavBar(props) {
                         </Container>
                         <Nav className="me-auto">
                             <Nav.Item as="li">
-                                <Nav.Link onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
+                                {props.loggedIn ?
+                                    <Nav.Link onClick={() => props.handleLogout()}>Logout</Nav.Link> :
+                                    <Nav.Link onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
+                                }
                             </Nav.Item>
                         </Nav>
                         <i id="loginLogo" className="bi bi-person-circle d-flex justify-content-end"></i>

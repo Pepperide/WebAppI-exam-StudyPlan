@@ -6,7 +6,7 @@ function Layout(props) {
     return (
         <>
             <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
-                <NavBar />
+                <NavBar loggedIn={props.loggedIn} handleLogout={props.handleLogout} />
                 <Outlet />
             </Container>
         </>

@@ -1,18 +1,22 @@
-import { Form, Button, Col, Row, Container } from 'react-bootstrap'
+import { Form, Button, Col, Row, Container, Alert } from 'react-bootstrap'
 import './css/Authentication.css'
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 const logo = require('../data/Logo_PoliTo_dal_2021_blu.png')
 
 function LoginRoute(props) {
     return (
         <>
+            {props.message && <Row>
+                <Alert variant={props.message.type} onClose={() => props.setMessage('')} dismissible>{props.message.msg}</Alert>
+            </Row>}
             <div className='d-flex loginView'>
                 <Row className="align-self-center mainContent">
                     <Col>
                         <img id="loginLogoPolito" src={logo} />
                     </Col>
                     <Col className="d-flex justify-content-center">
-                        <LoginForm />
+                        <LoginForm userLoginCallback={props.userLoginCallback} />
                     </Col>
                 </Row>
             </div>
@@ -20,20 +24,31 @@ function LoginRoute(props) {
     );
 }
 function LoginForm(props) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
     const handleNavigation = (path) => {
         navigate(path);
     }
 
+    const doLogin = (event) => {
+        event.preventDefault();
+        //TODO validate form
+        const credentials = { username, password };
+        props.userLoginCallback(credentials);
+        navigate('/');
+    }
+
     return (
         <>
-            <Form className="loginForm d-flex">
+            <Form className="loginForm d-flex" onSubmit={doLogin}>
 
                 <div className="align-self-center" style={{ height: "80%" }}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label id="email" className="label" >Email address</Form.Label>
                         <div className="d-flex justify-content-center">
-                            <Form.Control className="inputBar" type="email" placeholder="Enter email" />
+                            <Form.Control className="inputBar" type="email" placeholder="Enter email" value={username} onChange={ev => setUsername(ev.target.value)} required={true} />
                         </div>
 
                     </Form.Group>
@@ -41,7 +56,7 @@ function LoginForm(props) {
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label className="label">Password</Form.Label>
                         <div className="d-flex justify-content-center">
-                            <Form.Control className="inputBar" type="password" placeholder="Password" />
+                            <Form.Control className="inputBar" type="password" placeholder="Password" value={password} onChange={ev => setPassword(ev.target.value)} required={true} />
                         </div>
                     </Form.Group>
 

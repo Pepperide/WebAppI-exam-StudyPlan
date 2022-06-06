@@ -56,3 +56,9 @@ INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (4,"01URSPD");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (5,"01OUZPD");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (5,"01UDUOV");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (3,"01OUZPD");
+
+INSERT INTO USER(email,hash,salt,studentID) VALUES("giuseppe@studenti.polito.it","5f4594aa502b04ca78027a4da10871c09122194ef6e664d02255de20aa7ee550","b61ad8bfb4f70662",1);
+INSERT INTO USER(email,hash,salt,studentID) VALUES("mario@studenti.polito.it","c56d2d158ea4e9e76f7e6b06d513ef28e91a4f2856f18d8b9fdb2391dbc30d70","83cd9b493e26d478",2);
+INSERT INTO USER(email,hash,salt,studentID) VALUES("luca@studenti.polito.it","f1115f0c3ae78c2698561ca002f1b85f5b15ff74c599d4ab71808f0238922635","59aadeab86dda8d5",3);
+INSERT INTO USER(email,hash,salt,studentID) VALUES("delpiero@studenti.polito.it","2c3d47b2496066e3d152ec47b8395e02913f3c235f4de437a9dcefa424004642","ee22b53950756daa",4);
+INSERT INTO USER(email,hash,salt,studentID) VALUES("totti@studenti.polito.it","5815bdd4c2f13e2ede8c934838d33b02cae0b4633fe2d5e0984ab3fccf47225a","0ea0a98d0210f8c4",5);
