@@ -5,14 +5,14 @@ import './css/StudyPlanTable.css'
 function StudyPlanTable(props) {
     return (
         <>
-            <Table className="main-table" striped bordered hover size="sm">
+            <Table className="main-table" hover size="sm">
                 <thead>
                     <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Credits</th>
-                        <th>Enrolled students</th>
-                        <th>Max students</th>
+                        <th className="table-header">Code</th>
+                        <th className="table-header">Name</th>
+                        <th className="table-header">Credits</th>
+                        <th className="table-header">Enrolled students</th>
+                        <th className="table-header">Max students</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,11 +40,11 @@ function TableRow(props) {
     return (
         <>
             <tr onClick={toggleCollapsed}>
-                <td className={collapsed ? "table-row-main" : "table-row-main open"}>{props.course.code}</td>
-                <td className={collapsed ? "table-row-main" : "table-row-main open"}>{props.course.name}</td>
-                <td className={collapsed ? "table-row-main" : "table-row-main open"}>{props.course.credits}</td>
-                <td className={collapsed ? "table-row-main" : "table-row-main open"}></td>
-                <td className={collapsed ? "table-row-main" : "table-row-main open"}>{props.course.maxStudents}</td>
+                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.code}</td>
+                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.name}</td>
+                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.credits}</td>
+                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.enrolledStudents}</td>
+                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.maxStudents}</td>
             </tr>
             {collapsed ? '' : <TableRowExpanded preparatoryCourse={props.course.preparatoryCourse} incompatibleCourses={props.course.incompatibleCourses} />}
         </>
@@ -54,23 +54,23 @@ function TableRow(props) {
 function TableRowExpanded(props) {
     return (
         <tr>
-            <td colSpan={5}>
+            <td className="border-none hidden-table" colSpan={5}>
                 <Row>
-                    <Col className="hidden-table">
-                        <table className='table table-borderless' size="sm">
+                    <Col>
+                        <Table className="hidden-table" size="sm">
                             <thead>
                                 <tr>
-                                    <th>Mandatory course</th>
+                                    <th className="table-header">Mandatory course</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{props.preparatoryCourse}</td>
+                                    <td className="table-row">{props.preparatoryCourse}</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </Table>
                     </Col>
-                    <Col className="hidden-table">
+                    <Col>
                         <table className='table table-borderless' size="sm">
                             <thead>
                                 <tr>
@@ -81,7 +81,7 @@ function TableRowExpanded(props) {
 
                                 {props.incompatibleCourses.map((inc) => {
                                     return (<tr>
-                                        <td>{inc}</td>
+                                        <td className="table-row">{inc}</td>
                                     </tr>);
                                 })}
 

@@ -33,19 +33,18 @@ function NavBar(props) {
                     <Titlebar />
                 </Row>
                 <Row>
-                    <Navbar bg="dark" variant="dark">
-
+                    <Navbar variant="dark">
                         <Col xs={9}>
                             <Container className='d-flex justify-content-center'>
-                                <Nav className="me-auto ">
+                                <Nav className="me-auto r">
                                     <Nav.Item as="li">
-                                        <Nav.Link onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
+                                        <Nav.Link className="action-list" onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item as="li">
-                                        <Nav.Link onClick={() => { }}>Actions</Nav.Link>
+                                        <Nav.Link className="action-list" onClick={() => { }}>Actions</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item as="li">
-                                        <Nav.Link onClick={() => { }}>Contacts</Nav.Link>
+                                        <Nav.Link className="action-list" onClick={() => { }}>Contacts</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Container>
@@ -55,17 +54,17 @@ function NavBar(props) {
                                 {props.loggedIn ?
                                     <Nav className="me-auto">
                                         <Nav.Item as="li">
-                                            <Nav.Link>{user.name} {user.surname}</Nav.Link>
+                                            <Nav.Link className="action-list">{user.name} {user.surname}</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item as="li">
-                                            <Nav.Link onClick={() => props.handleLogout()}> Logout</Nav.Link>
+                                            <Nav.Link className="action-list" onClick={() => props.handleLogout()}> Logout</Nav.Link>
                                         </Nav.Item>
 
                                     </Nav>
                                     :
                                     <Nav>
                                         <Nav.Item as="li">
-                                            <Nav.Link onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
+                                            <Nav.Link className="action-list" onClick={() => { handleNavigation('/login') }}>Login</Nav.Link>
                                         </Nav.Item>
 
                                     </Nav>}

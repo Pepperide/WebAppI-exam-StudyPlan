@@ -97,10 +97,12 @@ app.get(PATH + '/courses', async (req, res) => {
     try {
         const courses = await database.getCourses();
         const incompatibleCourses = await database.getIncompatibleCourses();
-        // TODO enrolled_students
+        const enrolledStudents = await database.getEnrolledStudents();
         courses.forEach((c) => {
             const inc = incompatibleCourses.filter((i) => i.courseCode === c.code).map((i) => i.incompatibleCode);
+            const stu = enrolledStudents.find((s) => s.courseID === c.code);
             c["incompatibleCourses"] = inc;
+            c["enrolledStudents"] = stu ? stu.enrolledStudents : 0;
         })
 
         return res.status(200).json(courses);

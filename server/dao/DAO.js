@@ -137,8 +137,7 @@ class DAO {
         return new Promise((resolve, reject) => {
             const sql =
                 `   SELECT *
-                    FROM COURSE C, INCOMPATIBLE_COURSES I
-                    WHERE C.code=I.courseCode;`
+                    FROM INCOMPATIBLE_COURSES;`
 
             this.db.all(sql, (err, rows) => {
                 if (err)
@@ -146,6 +145,19 @@ class DAO {
                 resolve(rows);
             });
         });
+    }
+
+    getEnrolledStudents() {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   SELECT courseID, COUNT(studentID) AS enrolledStudents
+                    FROM ENROLLED_STUDENTS
+                    GROUP BY courseID`;
+            this.db.all(sql, (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            })
+        })
     }
 }
 module.exports = DAO;

@@ -1,0 +1,8 @@
+body {
+    background: linear-gradient(to right, #0076b1 0%, #003576 100%) fixed;
+}
+
+.main {
+    padding-left: 0;
+    padding-right: 0;
+}
