@@ -1,0 +1,34 @@
+/* body {
+    background-color: #e6e6e6;
+} */
+
+.loginView {
+    height: 100vh;
+}
+
+.mainContent {
+    width: 100vw;
+}
+
+.loginForm {
+    max-width: 400px;
+    background-color: #202124;
+    border-radius: 30px;
+}
+
+.loginForm .label {
+    margin-left: 10px;
+    color: white;
+}
+
+.loginForm .label#email {
+    margin-top: 10px;
+}
+
+.loginForm .inputBar {
+    max-width: 90%;
+}
+
+#loginLogoPolito {
+    margin-left: 10px;
+}

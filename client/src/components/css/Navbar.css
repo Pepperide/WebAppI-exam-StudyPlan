@@ -1,0 +1,63 @@
+/* --- NAVBAR ---*/
+
+/* Contains headerbar and navbar */
+.topbar {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Contains logo and page title*/
+.headerbar .title {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.headerbar .title#navbarTitle {
+    font-size: 30px;
+    color: white;
+}
+
+.headerbar #logoPolito {
+    width: 100px;
+    height: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+
+}
+
+.navbar #loginLogo {
+    color: #fc7a08 !important;
+    font-size: 30px;
+    padding-right: 0px;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.navbar #loginLogo:hover {
+    opacity: 1;
+}
+
+/* Contains page actions */
+.navbar {
+    width: 90%;
+    max-height: 50px;
+    margin-left: 5%;
+    margin-top: 10px;
+    border-radius: 100px;
+    background: linear-gradient(to left, #e0e7f0 0%, #d1ddee 100%);
+}
+
+.navbar-nav {
+    margin-right: 0px !important;
+}
+
+.action-list {
+    color: #fc7a08 !important;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.action-list:hover {
+    opacity: 1;
+    font-size: 18px;
+}
