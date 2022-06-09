@@ -6,7 +6,7 @@ function NotLoggedInView(props) {
         <>
             <Container fluid>
                 <h1>Polito study plan</h1>
-                <StudyPlanTable courses={props.courses} />
+                <StudyPlanTable courses={props.courses} mode={'view'} />
             </Container>
         </>
     );

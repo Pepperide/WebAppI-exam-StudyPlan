@@ -7,7 +7,7 @@
 
 .main-table .table-header {
     border-width: 0px;
-    color: white;
+    color: black;
 }
 
 .main-table .table-row {
@@ -59,4 +59,16 @@
     color: white !important;
     background-color: #fc7a08 !important;
     border-width: 0px;
+}
+
+/* #expand-row-icon:hover {
+    font-size: 150px;
+} */
+
+#plus-button {
+    color: rgb(0, 87, 0);
+}
+
+#dash-button {
+    color: red;
 }

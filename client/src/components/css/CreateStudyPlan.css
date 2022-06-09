@@ -1,0 +1,34 @@
+.base-layer {
+    background-color: white;
+    height: 70%;
+    border-radius: 50px;
+}
+
+.subtitle {
+    text-align: center;
+}
+
+.study-plan-view-button {
+    margin-bottom: 10px;
+}
+
+.workload-text {
+    text-decoration: none;
+    color: #212529;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.workload-text.invalid {
+    color: red;
+}
+
+.workload-text.valid {
+    color: green;
+}
+
+.workload-text.error {
+    font-size: 15px;
+    color: red;
+}

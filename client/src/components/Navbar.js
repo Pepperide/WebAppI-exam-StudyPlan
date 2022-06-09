@@ -23,7 +23,13 @@ function NavBar(props) {
     const user = useContext(UserContext);
 
     const handleNavigation = (path) => {
+        console.log(path)
         navigate(path);
+    }
+
+    const logout = () => {
+        props.handleLogout();
+        navigate('/');
     }
 
     return (
@@ -37,12 +43,25 @@ function NavBar(props) {
                         <Col xs={9}>
                             <Container className='d-flex justify-content-center'>
                                 <Nav className="me-auto r">
-                                    <Nav.Item as="li">
-                                        <Nav.Link className="action-list" onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item as="li">
-                                        <Nav.Link className="action-list" onClick={() => { }}>Actions</Nav.Link>
-                                    </Nav.Item>
+                                    {props.loggedIn ?
+                                        <Nav.Item as="li">
+                                            <Nav.Link className="action-list" onClick={() => { handleNavigation('/user/' + user.id) }}>Home</Nav.Link>
+                                        </Nav.Item> :
+                                        <Nav.Item as="li">
+                                            <Nav.Link className="action-list" onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
+                                        </Nav.Item>
+                                    }
+
+
+                                    {props.loggedIn ?
+                                        <Nav.Item as="li">
+                                            <Nav.Link className="action-list" onClick={() => { handleNavigation('/user/' + user.id + '/studyplan') }}>Study Plan</Nav.Link>
+                                        </Nav.Item> :
+                                        <Nav.Item as="li">
+                                            <Nav.Link className="action-list" onClick={() => { }}>Actions</Nav.Link>
+                                        </Nav.Item>
+                                    }
+
                                     <Nav.Item as="li">
                                         <Nav.Link className="action-list" onClick={() => { }}>Contacts</Nav.Link>
                                     </Nav.Item>
@@ -57,7 +76,7 @@ function NavBar(props) {
                                             <Nav.Link className="action-list">{user.name} {user.surname}</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item as="li">
-                                            <Nav.Link className="action-list" onClick={() => props.handleLogout()}> Logout</Nav.Link>
+                                            <Nav.Link className="action-list" onClick={() => logout()}> Logout</Nav.Link>
                                         </Nav.Item>
 
                                     </Nav>

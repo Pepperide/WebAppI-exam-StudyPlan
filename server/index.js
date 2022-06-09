@@ -5,7 +5,8 @@ const fs = require('fs');
 const DAO = require('./dao/DAO')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const session = require('express-session')
+const session = require('express-session');
+const { param } = require('express-validator');
 
 /* --- START DATABASE --- */
 const database = new DAO("courses.sqlite");
@@ -104,10 +105,35 @@ app.get(PATH + '/courses', async (req, res) => {
             c["incompatibleCourses"] = inc;
             c["enrolledStudents"] = stu ? stu.enrolledStudents : 0;
         })
-
+        courses.sort((a, b) => { return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1 });
         return res.status(200).json(courses);
     }
     catch (err) {
+        console.log(err)
+        return res.status(503).json(err);
+    }
+});
+
+app.get(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+    try {
+        const courses = await database.getStudyPlanByStudentID(req.user.id);
+        courses.sort((a, b) => { return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1 });
+        return res.status(200).json(courses);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(503).json(err);
+    }
+});
+
+app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
+    try {
+        const student = await database.getStudentByID(req.user.id);
+
+        return res.status(200).json(student);
+    }
+    catch (err) {
+        console.log(err);
         return res.status(503).json(err);
     }
 });

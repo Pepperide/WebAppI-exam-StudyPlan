@@ -57,8 +57,59 @@ async function getCourses() {
 
 }
 
+async function getStudyPlan(userID) {
+    const url = APIURL + '/courses/studyplan';
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const list = await response.json('');
+            return list;
+        }
+        else {
+            console.log(response.statusText);
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+
+}
+
+async function getStudentInfo() {
+    const url = APIURL + '/studentInfo';
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const list = await response.json('');
+            return list;
+        }
+        else {
+            console.log(response.statusText);
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+}
 export {
     login,
     logout,
-    getCourses
+    getCourses,
+    getStudyPlan,
+    getStudentInfo
 }

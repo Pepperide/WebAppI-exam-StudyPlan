@@ -117,6 +117,19 @@ class DAO {
         });
     }
 
+    getStudentByID(id) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   SELECT *
+                    FROM STUDENT
+                    WHERE studentId=?`;
+            this.db.get(sql, [id], (err, row) => {
+                if (err) reject(err);
+                resolve(row);
+            })
+        })
+    }
+
     getCourses() {
         return new Promise((resolve, reject) => {
             const sql =
@@ -158,6 +171,19 @@ class DAO {
                 resolve(rows);
             })
         })
+    }
+
+    getStudyPlanByStudentID(studentID) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   SELECT *
+                    FROM COURSE C, ENROLLED_STUDENTS E
+                    WHERE C.code=E.courseID AND E.studentID=?`;
+            this.db.all(sql, [studentID], (err, rows) => {
+                if (err) reject(err);
+                resolve(rows);
+            })
+        });
     }
 }
 module.exports = DAO;

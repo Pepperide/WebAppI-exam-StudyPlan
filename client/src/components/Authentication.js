@@ -1,10 +1,20 @@
 import { Form, Button, Col, Row, Container, Alert } from 'react-bootstrap'
 import './css/Authentication.css'
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import UserContext from '../UserContext';
 const logo = require('../data/Logo_PoliTo_dal_2021_blu.png')
 
 function LoginRoute(props) {
+    const user = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (props.loggedIn) {
+            navigate('/user/' + user.id);
+        }
+    }, [props.loggedIn]);
+
     return (
         <>
             {props.message && <Row>
@@ -27,11 +37,6 @@ function LoginForm(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (props.loggedIn)
-            navigate('/');
-    }, [props.loggedIn]);
 
     const handleNavigation = (path) => {
         navigate(path);

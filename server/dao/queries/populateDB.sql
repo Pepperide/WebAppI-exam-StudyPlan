@@ -43,7 +43,7 @@ INSERT INTO INCOMPATIBLE_COURSES(courseCode,incompatibleCode) VALUES ("01NYHOV",
 INSERT INTO STUDENT(name,surname,workload) VALUES ("Giuseppe","Fanuli","full-time");
 INSERT INTO STUDENT(name,surname,workload) VALUES ("Mario","Rossi","full-time");
 INSERT INTO STUDENT(name,surname,workload) VALUES ("Luca","Neri","part-time");
-INSERT INTO STUDENT(name,surname,workload) VALUES ("Alessandro","Del Piero","part-time");
+INSERT INTO STUDENT(name,surname,workload) VALUES ("Alessandro","Del Piero",null);
 INSERT INTO STUDENT(name,surname,workload) VALUES ("Francesco","Totti","full-time");
 
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (1,"01TXYOV");
@@ -52,7 +52,7 @@ INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (1,"04GSPOV");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (2,"01TXYOV");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (3,"01TXYOV");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (2,"01URSPD");
-INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (4,"01URSPD");
+INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (5,"01URSPD");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (5,"01OUZPD");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (5,"01UDUOV");
 INSERT INTO ENROLLED_STUDENTS(studentID,courseID) VALUES (3,"01OUZPD");
