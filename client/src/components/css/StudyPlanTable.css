@@ -72,3 +72,7 @@
 #dash-button {
     color: red;
 }
+
+.disabled {
+    color: #8d8d8d !important;
+}

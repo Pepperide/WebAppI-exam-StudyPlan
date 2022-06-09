@@ -13,7 +13,14 @@ function LoggedInView(props) {
                         <Alert variant={props.message.type} onClose={() => props.setMessage('')} dismissible>{props.message.msg}</Alert>
                     </Row>
                 }
-                <h1>Your study plan</h1>
+
+
+                {props.studyPlan.length > 0 && <>
+                    <h2>Your study plan</h2>
+                    <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
+                </>}
+
+                <h2>Course list</h2>
                 <StudyPlanTable courses={props.courses} mode={'view'} />
 
             </Container>

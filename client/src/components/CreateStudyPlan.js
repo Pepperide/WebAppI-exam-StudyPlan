@@ -14,26 +14,20 @@ function CreateStudyPlan(props) {
     }
 
     return (
-        <Container fluid style={{ width: "60%", height: "100%" }}>
+        <>
             <Row className="base-layer d-flex justify-content-around">
                 <Row>
                     <Col>
-                        <h1 className="subtitle">You havn't still defined a study plan</h1>
-
+                        <h2 className="subtitle">Create your study plan</h2>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <h1 className="subtitle">Let's Create it!</h1>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="d-flex justify-content-center">
-                        <Button className="study-plan-view-button" onClick={() => handleNavigation('add')}>Define your study plan</Button>
+                        <h3 className="subtitle">Set the workload</h3>
                     </Col>
                 </Row>
             </Row>
-        </Container>
+        </>
     );
 }
 

@@ -54,9 +54,14 @@ function NavBar(props) {
 
 
                                     {props.loggedIn ?
-                                        <Nav.Item as="li">
-                                            <Nav.Link className="action-list" onClick={() => { handleNavigation('/user/' + user.id + '/studyplan') }}>Study Plan</Nav.Link>
-                                        </Nav.Item> :
+                                        (props.studyPlan.length > 0 ?
+                                            <Nav.Item as="li">
+                                                <Nav.Link className="action-list" onClick={() => { handleNavigation('/user/' + user.id + '/studyplan/edit') }}>Edit Study Plan</Nav.Link>
+                                            </Nav.Item> :
+                                            <Nav.Item as="li">
+                                                <Nav.Link className="action-list" onClick={() => { handleNavigation('/user/' + user.id + '/studyplan/add') }}>Create Study Plan</Nav.Link>
+                                            </Nav.Item>
+                                        ) :
                                         <Nav.Item as="li">
                                             <Nav.Link className="action-list" onClick={() => { }}>Actions</Nav.Link>
                                         </Nav.Item>

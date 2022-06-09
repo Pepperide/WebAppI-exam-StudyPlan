@@ -21,7 +21,7 @@ function Layout(props) {
     return (
         <>
             <Container fluid className="main">
-                <NavBar loggedIn={props.loggedIn} handleLogout={props.handleLogout} />
+                <NavBar loggedIn={props.loggedIn} handleLogout={props.handleLogout} studyPlan={props.studyPlan} />
                 <Outlet />
             </Container>
         </>

@@ -185,5 +185,60 @@ class DAO {
             })
         });
     }
+
+    deleteStudyPlan(studentID) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   DELETE FROM ENROLLED_STUDENTS
+                    WHERE studentID=?`;
+            const sql2 =
+                `   UPDATE STUDENT
+                    SET workload=NULL
+                    WHERE studentID=?;`;
+
+            this.db.serialize(() => {
+                this.db.run('BEGIN TRANSACTION;', (err) => { if (err) reject(err) });
+
+                this.db.run(sql, [studentID], (err) => {
+                    if (err) reject(err);
+                });
+                this.db.run(sql2, [studentID], (err) => {
+                    if (err) reject(err);
+                })
+                this.db.run('COMMIT;');
+
+            });
+            resolve(true);
+        });
+    }
+
+    storeStudyPlan(courses, workload, studentID) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   INSERT INTO ENROLLED_STUDENTS(studentID,courseID)
+                    VALUES(?,?);`;
+            const sql2 =
+                `   UPDATE STUDENT
+                    SET workload=?
+                    WHERE studentID=?;`;
+
+
+            this.db.serialize(() => {
+                this.db.run('BEGIN TRANSACTION;', (err) => { if (err) reject(err) });
+
+                courses.forEach((c) => {
+                    this.db.run(sql, [studentID, c.code], (err) => {
+                        if (err) reject(err);
+                    });
+                });
+
+                this.db.run(sql2, [workload, studentID], (err) => {
+                    if (err) reject(err);
+                });
+                this.db.run('COMMIT;');
+            });
+            resolve(true);
+        })
+    }
 }
 module.exports = DAO;

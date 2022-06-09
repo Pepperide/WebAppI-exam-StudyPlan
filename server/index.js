@@ -138,4 +138,29 @@ app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
     }
 });
 
+app.post(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+    try {
+
+        await database.deleteStudyPlan(req.user.id);
+        await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);
+
+        return res.status(201).end();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(503).json(err);
+    }
+})
+
+app.delete(PATH + '/course/studyplan', isLoggedIn, async (req, res) => {
+    try {
+        await database.deleteStudyPlan(req.user.id);
+
+        return res.status(204).end();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(503).json(err);
+    }
+})
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));

@@ -62,16 +62,18 @@ function StudyPlanTable(props) {
 function TableRow(props) {
     const [collapsed, setCollapsed] = useState(true);
     const [inserted, setInserted] = useState(false);
+    const [disabled, setDisabled] = useState(false);
     const toggleCollapsed = () => { setCollapsed((old) => !old) };
 
     useEffect(() => {
-        if (props.studyPlan && !!props.studyPlan.find((s) => s.code === props.course.code)) {
-            setInserted(true);
+        if (props.studyPlan) {
+            const incompatible = props.studyPlan.find((s) => props.course.incompatibleCourses.some((i) => i === s.code));
+
+            !!incompatible ? setDisabled(true) : setDisabled(false);
+            !!props.studyPlan.find((s) => s.code === props.course.code) ? setInserted(true) : setInserted(false);
         }
-        else {
-            setInserted(false);
-        }
-    }, [props.studyPlan])
+
+    }, [props.studyPlan]);
 
     const addCourse = () => {
         props.addCourseToStudyPlan(props.course);
@@ -95,20 +97,37 @@ function TableRow(props) {
             </>}
             {props.mode === 'edit' && <>
                 <tr>
-                    <td className={collapsed ? "table-row" : "table-row open"}>
-                        {inserted ?
-                            <i id="dash-button" className="bi bi-dash-circle-fill" onClick={() => removeCourse()}></i> :
-                            <i id="plus-button" className="bi bi-plus-circle-fill" onClick={() => addCourse()}></i>
-                        }
-                    </td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>{props.course.code}</td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>{props.course.name}</td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>{props.course.credits}</td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>{props.course.enrolledStudents}</td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>{props.course.maxStudents}</td>
-                    <td className={collapsed ? "table-row" : "table-row open"}>
-                        <i className="bi bi-caret-down-fill" onClick={toggleCollapsed}></i>
-                    </td>
+                    {
+                        disabled ?
+                            <>
+                                <td></td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>{props.course.code}</td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>{props.course.name}</td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>{props.course.credits}</td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>{props.course.enrolledStudents}</td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>{props.course.maxStudents}</td>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>
+                                    <i className="bi bi-caret-down-fill" onClick={toggleCollapsed}></i>
+                                </td>
+                            </> :
+                            <>
+                                <td className={collapsed ? "table-row disabled" : "table-row open"}>
+                                    {inserted ?
+                                        <i id="dash-button" className="bi bi-dash-circle-fill" onClick={() => removeCourse()}></i> :
+                                        <i id="plus-button" className="bi bi-plus-circle-fill" onClick={() => addCourse()}></i>
+                                    }
+                                </td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.code}</td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.name}</td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.credits}</td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.enrolledStudents}</td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>{props.course.maxStudents}</td>
+                                <td className={collapsed ? "table-row" : "table-row open"}>
+                                    <i className="bi bi-caret-down-fill" onClick={toggleCollapsed}></i>
+                                </td>
+                            </>
+                    }
+
                 </tr>
                 {collapsed ? '' : <TableRowExpanded preparatoryCourse={props.course.preparatoryCourse} incompatibleCourses={props.course.incompatibleCourses} />}
             </>}

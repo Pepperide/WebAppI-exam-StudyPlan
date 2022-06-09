@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import UserContext from './UserContext';
-import { getCourses, getStudyPlan, login, logout } from './API';
+import { deleteUserStudyPlan, getCourses, getStudyPlan, login, logout, storeUserStudyPlan } from './API';
 
 import { LoginRoute } from './components/Authentication';
 import Layout from './components/Layout';
@@ -48,9 +48,8 @@ function App() {
     setStudyPlan(plan)
   }
 
-  const storeStudyPlan = async () => {
-    console.log("Stored");
-    //TODO store studyplan
+  const storeStudyPlan = async (workload) => {
+    await storeUserStudyPlan({ studyPlan, workload });
   }
 
   const handleLogin = async (credentials) => {
@@ -75,6 +74,12 @@ function App() {
     setStudyPlan([]);
   }
 
+  const deleteStudyPlan = async () => {
+    // TODO FIX THIS
+    // await deleteUserStudyPlan();
+    setStudyPlan([]);
+  }
+
   return (
     <>
       <UserContext.Provider value={user}>
@@ -85,23 +90,31 @@ function App() {
               <LoginRoute userLoginCallback={handleLogin} message={message} setMessage={setMessage} loggedIn={loggedIn} />
             } />
 
-            <Route path='/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} />}>
+            <Route path='/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
               <Route path='' element={<NotLoggedInView courses={allCourses} mode={"view"} />} />
             </Route>
 
-            <Route path='/user/:userID/' element={<LoggedInLayout loggedIn={loggedIn} handleLogout={handleLogout} />}>
-              <Route path='' element={<LoggedInView courses={allCourses} message={message} setMessage={setMessage} />} />
-              <Route path='studyplan' element={<StudyPlan courses={studyPlan} />} />
+            <Route path='/user/:userID/' element={<LoggedInLayout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
+              <Route path='' element={<LoggedInView courses={allCourses} studyPlan={studyPlan} message={message} setMessage={setMessage} />} />
               <Route path='studyplan/add' element={
                 <EditStudyPlan
                   courses={allCourses}
                   studyPlan={studyPlan}
+                  setStudyPlan={setStudyPlan}
                   addCourseToStudyPlan={addCourseToStudyPlan}
                   removeCourseFromStudyPlan={removeCourseFromStudyPlan}
-                  storeStudyPlan={storeStudyPlan} />} />
+                  storeStudyPlan={storeStudyPlan}
+                  deleteStudyPlan={deleteStudyPlan} />} />
+              <Route path='studyplan/edit' element={
+                <EditStudyPlan
+                  courses={allCourses}
+                  studyPlan={studyPlan}
+                  setStudyPlan={setStudyPlan}
+                  addCourseToStudyPlan={addCourseToStudyPlan}
+                  removeCourseFromStudyPlan={removeCourseFromStudyPlan}
+                  storeStudyPlan={storeStudyPlan}
+                  deleteStudyPlan={deleteStudyPlan} />} />
             </Route>
-
-
 
           </Routes>
         </Router>

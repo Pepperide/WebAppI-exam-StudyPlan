@@ -106,10 +106,57 @@ async function getStudentInfo() {
         throw err;
     }
 }
+
+async function storeUserStudyPlan(studyPlan) {
+    const url = APIURL + '/courses/studyplan'
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(studyPlan),
+        });
+        if (!response.ok) {
+            const errDetails = await response.text();
+            throw errDetails;
+        }
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+}
+
+async function deleteUserStudyPlan() {
+    const url = APIURL + '/course/studyplan'
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            const errDetails = await response.text();
+            throw errDetails;
+        }
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+}
 export {
     login,
     logout,
     getCourses,
     getStudyPlan,
-    getStudentInfo
+    getStudentInfo,
+    storeUserStudyPlan,
+    deleteUserStudyPlan
 }

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row, Button, Form, Table, Alert } from 'react-bootstrap'
+import { Prev } from 'react-bootstrap/esm/PageItem';
 import { useNavigate } from 'react-router-dom';
 import { getStudentInfo } from '../API';
 import UserContext from '../UserContext';
@@ -10,45 +11,74 @@ function EditStudyPlan(props) {
     const [workload, setWorkload] = useState({});
     const [added, setAdded] = useState(0);
     const [message, setMessage] = useState('');
+    const [tempStudyPlan, setTempStudyPlan] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
             const info = await getStudentInfo();
             if (info.workload !== null) {
                 const w = info.workload === 'part-time' ? { value: 'Part-time', min: 20, max: 40 } : { value: "Full-Time", min: 60, max: 80 };
-                setWorkload(w.workload);
+                setWorkload(w);
             }
         })();
+        setTempStudyPlan(props.studyPlan);
     }, []);
 
-    const addCourse = (course) => {
-        const inc = props.studyPlan.find((s) => s.incompatibleCourses.some((i) => { return i === course.code }));
-        const foundMandatory = props.studyPlan.some((s) => { return s.code === course.preparatoryCourse });
+    useEffect(() => {
+        setAdded(tempStudyPlan.reduce((pre, curr) => { return pre + curr.credits }, 0));
+    }, [tempStudyPlan]);
 
-        if (!!inc === false && (course.preparatoryCourse === null || foundMandatory)) {
-            props.addCourseToStudyPlan(course);
-            setAdded((old) => old + course.credits);
+    const handleNavigation = (path) => {
+        navigate(path);
+    }
+
+    const addCourse = (course) => {
+        const incompatible = tempStudyPlan.find((s) => course.incompatibleCourses.some((i) => i === s.code));
+        const mandatory = tempStudyPlan.find((s) => s.code === course.preparatoryCourse);
+
+        console.log(!!mandatory);
+        if (!!incompatible) {
+            setMessage(`"${course.name}" is incompatible with "${incompatible.name}"`);
+            return;
         }
-        else if (!foundMandatory) {
+
+        if (!!course.preparatoryCourse && !!mandatory === false) {
             setMessage(`"You need to insert "${course.preparatoryCourse}" before "${course.name}"`);
+            return;
         }
-        else {
-            setMessage(`"${course.name}" is incompatible with "${inc.name}"`);
-        }
+        setTempStudyPlan((old) => [...old, course]);
     }
 
     const removeCourse = (course) => {
-        props.removeCourseFromStudyPlan(course);
-        setAdded((old) => old - course.credits);
+        const mandatory = tempStudyPlan.find((s) => s.preparatoryCourse === course.code);
+
+        if (!!mandatory) {
+            setMessage(`"You cannot delete "${course.name}" because is mandatory for "${mandatory.name}"`);
+            return;
+        }
+        const plan = tempStudyPlan.filter((s) => s.code !== course.code);
+        setTempStudyPlan(plan);
     }
 
     const handleSubmit = () => {
+        console.log("Sono quis")
         if (added - workload.min > 0 && workload.max - added > 0) {
-            props.storeStudyPlan();
+            props.setStudyPlan(tempStudyPlan);
+            props.storeStudyPlan(workload.value.toLowerCase());
+            handleNavigation('../');
         }
         else {
             setMessage(`Workload error. You have to chose at least ${workload.min} and at most ${workload.max} credits`);
         }
+    }
+
+    const handleDeleteStudyPlan = () => {
+        setTempStudyPlan([]);
+        setWorkload({});
+        setAdded(0);
+        props.deleteStudyPlan();
+        handleNavigation('../');
     }
 
     return (
@@ -79,7 +109,9 @@ function EditStudyPlan(props) {
                                     <i>&#123;min:{workload.min}, max:{workload.max}&#125;</i>
                                 </Col>
                                 <Col className="d-flex justify-content-end">
-                                    <Button className="align-self-center" onClick={() => handleSubmit()}>Submit study plan</Button>
+                                    <Button variant="danger" className="align-self-center" onClick={() => handleDeleteStudyPlan()}>Delete</Button>
+                                    <Button className="align-self-center" onClick={() => handleNavigation('../')}>Cancel</Button>
+                                    <Button variant="secondary" className="align-self-center" onClick={() => handleSubmit()}>Submit study plan</Button>
                                 </Col>
                             </Row>
                             <Row>
@@ -88,12 +120,12 @@ function EditStudyPlan(props) {
                                 </Col>
                             </Row>
                             <Row>
-                                <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
+                                <StudyPlanTable courses={tempStudyPlan} mode={'lite'} />
                             </Row>
                             <Row>
                                 <StudyPlanTable
                                     courses={props.courses}
-                                    studyPlan={props.studyPlan}
+                                    studyPlan={tempStudyPlan}
                                     mode={'edit'}
                                     addCourseToStudyPlan={addCourse}
                                     removeCourseFromStudyPlan={removeCourse} />
