@@ -97,19 +97,6 @@ class DAO {
         });
     }
 
-    getEnrolledStudents() {
-        return new Promise((resolve, reject) => {
-            const sql =
-                `   SELECT courseID, COUNT(studentID) AS enrolledStudents
-                    FROM ENROLLED_STUDENTS
-                    GROUP BY courseID`;
-            this.db.all(sql, (err, rows) => {
-                if (err) reject(err);
-                resolve(rows);
-            })
-        })
-    }
-
     getStudyPlanByStudentID(studentID) {
         return new Promise((resolve, reject) => {
             const sql =
@@ -120,32 +107,6 @@ class DAO {
                 if (err) reject(err);
                 resolve(rows);
             })
-        });
-    }
-
-    deleteStudyPlan(studentID) {
-        return new Promise((resolve, reject) => {
-            const sql =
-                `   DELETE FROM ENROLLED_STUDENTS
-                    WHERE studentID=?`;
-            const sql2 =
-                `   UPDATE STUDENT
-                    SET workload=NULL
-                    WHERE studentID=?;`;
-
-            this.db.serialize(() => {
-                this.db.run('BEGIN TRANSACTION;', (err) => { if (err) reject(err) });
-
-                this.db.run(sql, [studentID], (err) => {
-                    if (err) reject(err);
-                });
-                this.db.run(sql2, [studentID], (err) => {
-                    if (err) reject(err);
-                })
-                this.db.run('COMMIT;');
-
-            });
-            resolve(true);
         });
     }
 
@@ -180,6 +141,32 @@ class DAO {
             });
             resolve(true);
         })
+    }
+
+    deleteStudyPlan(studentID) {
+        return new Promise((resolve, reject) => {
+            const sql =
+                `   DELETE FROM ENROLLED_STUDENTS
+                    WHERE studentID=?`;
+            const sql2 =
+                `   UPDATE STUDENT
+                    SET workload=NULL
+                    WHERE studentID=?;`;
+
+            this.db.serialize(() => {
+                this.db.run('BEGIN TRANSACTION;', (err) => { if (err) reject(err) });
+
+                this.db.run(sql, [studentID], (err) => {
+                    if (err) reject(err);
+                });
+                this.db.run(sql2, [studentID], (err) => {
+                    if (err) reject(err);
+                })
+                this.db.run('COMMIT;');
+
+            });
+            resolve(true);
+        });
     }
 
 }

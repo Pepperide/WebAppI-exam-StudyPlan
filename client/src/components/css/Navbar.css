@@ -1,18 +1,17 @@
 /* --- NAVBAR ---*/
 
-/* Contains headerbar and navbar */
-.topbar {
+.headerbar {
     padding-top: 10px;
     padding-bottom: 10px;
+    margin: 0px 0px 0px 0px;
 }
 
-/* Contains logo and page title*/
-.headerbar .title {
+.title {
     text-decoration: none;
     font-weight: bold;
 }
 
-.headerbar .title#navbarTitle {
+.headerbar #navbarTitle {
     font-size: 30px;
     color: white;
 }
@@ -25,39 +24,51 @@
 
 }
 
+.actionBar {
+    margin: 0px 0px 0px 0px;
+}
+
+.actionBar .navbar {
+    width: 90%;
+    max-height: 50px;
+    border-radius: 100px;
+    background: linear-gradient(to left, #e0e7f0 0%, #d1ddee 100%);
+    padding: 0px 0px 0px 0px;
+    margin-bottom: 20px;
+}
+
+.action-list {
+    padding: 0px 0px 0px 0px;
+    max-height: 40px;
+}
+
 .navbar #loginLogo {
     color: #fc7a08 !important;
     font-size: 30px;
-    padding-right: 0px;
+    padding-left: 3px;
+    padding-right: 25px;
     opacity: 0.8;
     transition: 0.3s;
 }
 
 .navbar #loginLogo:hover {
     opacity: 1;
-}
-
-/* Contains page actions */
-.navbar {
-    width: 90%;
-    max-height: 50px;
-    margin-left: 5%;
-    margin-top: 10px;
-    border-radius: 100px;
-    background: linear-gradient(to left, #e0e7f0 0%, #d1ddee 100%);
+    cursor: pointer;
 }
 
 .navbar-nav {
     margin-right: 0px !important;
 }
 
-.action-list {
+
+
+.action-item {
     color: #fc7a08 !important;
     opacity: 0.8;
     transition: 0.3s;
 }
 
-.action-list:hover {
+.action-item:hover {
     opacity: 1;
     font-size: 18px;
 }

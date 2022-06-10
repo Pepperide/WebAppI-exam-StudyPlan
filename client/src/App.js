@@ -9,9 +9,7 @@ import { deleteUserStudyPlan, getCourses, getStudyPlan, login, logout, storeUser
 import { LoginRoute } from './components/Authentication';
 import Layout from './components/Layout';
 import NotLoggedInView from './components/NotLoggedInView';
-import LoggedInLayout from './components/LoggedInLayout';
 import LoggedInView from './components/LoggedInView'
-import StudyPlan from './components/StudyPlan';
 import EditStudyPlan from './components/EditStudyPlan';
 
 
@@ -94,7 +92,7 @@ function App() {
               <Route path='' element={<NotLoggedInView courses={allCourses} mode={"view"} />} />
             </Route>
 
-            <Route path='/user/:userID/' element={<LoggedInLayout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
+            <Route path='/user/:userID/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
               <Route path='' element={<LoggedInView courses={allCourses} studyPlan={studyPlan} message={message} setMessage={setMessage} />} />
               <Route path='studyplan/add' element={
                 <EditStudyPlan

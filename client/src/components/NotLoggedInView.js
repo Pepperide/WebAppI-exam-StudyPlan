@@ -1,12 +1,16 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import StudyPlanTable from './StudyPlanTable';
 
+import './css/NotLoggedInView.css'
+
 function NotLoggedInView(props) {
     return (
         <>
             <Container fluid>
-                <h1>Polito study plan</h1>
-                <StudyPlanTable courses={props.courses} mode={'view'} />
+                <h2 className="title">PoliTO Study Plan</h2>
+                <Container className="table-frame">
+                    <StudyPlanTable courses={props.courses} mode={'view'} />
+                </Container>
             </Container>
         </>
     );

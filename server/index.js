@@ -173,7 +173,9 @@ app.delete(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
         return res.status(503).json(err);
     }
 });
+/*--------------------- */
 
+/* Students API */
 app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
     try {
         const student = await database.getStudentByID(req.user.id);
@@ -186,19 +188,4 @@ app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
     }
 });
 
-
-
-
-
-app.get(PATH + '/courses/enrolledstudents', isLoggedIn, async (req, res) => {
-    try {
-        const enrolledStudents = await database.getEnrolledStudents();
-        console.log(enrolledStudents);
-        return res.status(200).json(enrolledStudents);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(503).json(err);
-    }
-})
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));

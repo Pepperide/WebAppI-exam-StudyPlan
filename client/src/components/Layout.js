@@ -1,9 +1,12 @@
-import NavBar from "./Navbar";
+import { useContext, useEffect } from "react";
 import { Container } from 'react-bootstrap';
 import { Outlet, useNavigate } from 'react-router-dom';
-import './css/Layout.css'
-import { useContext, useEffect } from "react";
+
+import NavBar from "./Navbar";
 import UserContext from "../UserContext";
+
+import './css/Layout.css'
+
 
 function Layout(props) {
     const user = useContext(UserContext);

@@ -1,0 +1,17 @@
+.title {
+    color: white;
+    font-weight: "bold"
+}
+
+.subtitle {
+    color: white;
+    text-align: start;
+}
+
+.table-frame {
+    background-color: white;
+    border-radius: 50px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
