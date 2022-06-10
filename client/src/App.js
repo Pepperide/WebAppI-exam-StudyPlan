@@ -16,7 +16,6 @@ import EditStudyPlan from './components/EditStudyPlan';
 
 
 function App() {
-  const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [user, setUser] = useState({});
@@ -50,6 +49,7 @@ function App() {
 
   const storeStudyPlan = async (workload) => {
     await storeUserStudyPlan({ studyPlan, workload });
+    loadCourses();
   }
 
   const handleLogin = async (credentials) => {
@@ -75,9 +75,9 @@ function App() {
   }
 
   const deleteStudyPlan = async () => {
-    // TODO FIX THIS
-    // await deleteUserStudyPlan();
-    setStudyPlan([]);
+    await deleteUserStudyPlan();
+    loadStudyPlan();
+    loadCourses();
   }
 
   return (

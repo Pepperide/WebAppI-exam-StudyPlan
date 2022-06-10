@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import { Col, Container, Row, Button, Form, Table, Alert } from 'react-bootstrap'
+import { Col, Container, Row, Button, Form, Table, Alert, ThemeProvider } from 'react-bootstrap'
 import { Prev } from 'react-bootstrap/esm/PageItem';
 import { useNavigate } from 'react-router-dom';
-import { getStudentInfo } from '../API';
+import { getEnrolledStudents, getStudentInfo } from '../API';
 import UserContext from '../UserContext';
 import './css/CreateStudyPlan.css'
 import StudyPlanTable from './StudyPlanTable';
@@ -11,7 +11,7 @@ function EditStudyPlan(props) {
     const [workload, setWorkload] = useState({});
     const [added, setAdded] = useState(0);
     const [message, setMessage] = useState('');
-    const [tempStudyPlan, setTempStudyPlan] = useState([]);
+    const [oldStudyPlan, setOldStudyPlan] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,22 +22,21 @@ function EditStudyPlan(props) {
                 setWorkload(w);
             }
         })();
-        setTempStudyPlan(props.studyPlan);
+        setOldStudyPlan(props.studyPlan);
     }, []);
 
     useEffect(() => {
-        setAdded(tempStudyPlan.reduce((pre, curr) => { return pre + curr.credits }, 0));
-    }, [tempStudyPlan]);
+        setAdded(props.studyPlan.reduce((pre, curr) => { return pre + curr.credits }, 0));
+    }, [props.studyPlan]);
 
     const handleNavigation = (path) => {
         navigate(path);
     }
 
     const addCourse = (course) => {
-        const incompatible = tempStudyPlan.find((s) => course.incompatibleCourses.some((i) => i === s.code));
-        const mandatory = tempStudyPlan.find((s) => s.code === course.preparatoryCourse);
+        const incompatible = props.studyPlan.find((s) => course.incompatibleCourses.some((i) => i === s.code));
+        const mandatory = props.studyPlan.find((s) => s.code === course.preparatoryCourse);
 
-        console.log(!!mandatory);
         if (!!incompatible) {
             setMessage(`"${course.name}" is incompatible with "${incompatible.name}"`);
             return;
@@ -47,24 +46,29 @@ function EditStudyPlan(props) {
             setMessage(`"You need to insert "${course.preparatoryCourse}" before "${course.name}"`);
             return;
         }
-        setTempStudyPlan((old) => [...old, course]);
+        props.addCourseToStudyPlan(course);
     }
 
     const removeCourse = (course) => {
-        const mandatory = tempStudyPlan.find((s) => s.preparatoryCourse === course.code);
+        const mandatory = props.studyPlan.find((s) => s.preparatoryCourse === course.code);
 
         if (!!mandatory) {
             setMessage(`"You cannot delete "${course.name}" because is mandatory for "${mandatory.name}"`);
             return;
         }
-        const plan = tempStudyPlan.filter((s) => s.code !== course.code);
-        setTempStudyPlan(plan);
+        props.removeCourseFromStudyPlan(course);
     }
 
-    const handleSubmit = () => {
-        console.log("Sono quis")
+    const handleSubmit = async () => {
+        const errorCourses = props.studyPlan
+            .filter((course) => props.courses.some((e) => (course.maxStudents && e.code === course.code && e.enrolledStudents >= course.maxStudents)));
+
+        if (errorCourses.length > 0) {
+            setMessage(`Unable to add the following courses:\n${errorCourses.map((c) => { return c.code + '\n' })}`);
+            return;
+        }
+
         if (added - workload.min > 0 && workload.max - added > 0) {
-            props.setStudyPlan(tempStudyPlan);
             props.storeStudyPlan(workload.value.toLowerCase());
             handleNavigation('../');
         }
@@ -74,10 +78,15 @@ function EditStudyPlan(props) {
     }
 
     const handleDeleteStudyPlan = () => {
-        setTempStudyPlan([]);
+        setOldStudyPlan([]);
         setWorkload({});
         setAdded(0);
         props.deleteStudyPlan();
+        handleNavigation('../');
+    }
+
+    const cancelOperations = () => {
+        props.setStudyPlan(oldStudyPlan);
         handleNavigation('../');
     }
 
@@ -110,22 +119,22 @@ function EditStudyPlan(props) {
                                 </Col>
                                 <Col className="d-flex justify-content-end">
                                     <Button variant="danger" className="align-self-center" onClick={() => handleDeleteStudyPlan()}>Delete</Button>
-                                    <Button className="align-self-center" onClick={() => handleNavigation('../')}>Cancel</Button>
+                                    <Button className="align-self-center" onClick={() => cancelOperations()}>Cancel</Button>
                                     <Button variant="secondary" className="align-self-center" onClick={() => handleSubmit()}>Submit study plan</Button>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col className="align-self-center">
-                                    {!!message && <Alert variant={'danger'} onClose={() => setMessage('')} dismissible>{message}</Alert>}
+                                    {!!message && <Alert variant={'danger'} onClose={() => setMessage('')} dismissible><p>{message}</p></Alert>}
                                 </Col>
                             </Row>
                             <Row>
-                                <StudyPlanTable courses={tempStudyPlan} mode={'lite'} />
+                                <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
                             </Row>
                             <Row>
                                 <StudyPlanTable
                                     courses={props.courses}
-                                    studyPlan={tempStudyPlan}
+                                    studyPlan={props.studyPlan}
                                     mode={'edit'}
                                     addCourseToStudyPlan={addCourse}
                                     removeCourseFromStudyPlan={removeCourse} />

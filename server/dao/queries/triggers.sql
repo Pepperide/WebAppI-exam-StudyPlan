@@ -14,3 +14,21 @@ BEGIN
             )
         );
 END;
+
+CREATE TRIGGER IF NOT EXISTS update_enrolled_students_onInsert
+AFTER INSERT ON ENROLLED_STUDENTS
+BEGIN
+    UPDATE COURSE
+    SET enrolledStudents = enrolledStudents+1
+    WHERE code=NEW.courseID;
+    
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_enrolled_students_onDelete
+AFTER DELETE ON ENROLLED_STUDENTS
+BEGIN
+    UPDATE COURSE
+    SET enrolledStudents = enrolledStudents-1
+    WHERE code=OLD.courseID;
+    
+END;

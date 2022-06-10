@@ -1,37 +1,57 @@
 "use strict"
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const DAO = require('./dao/DAO')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
-const { param } = require('express-validator');
+const fs = require('fs');
+
+const DAO = require('./dao/DAO')
+
 
 /* --- START DATABASE --- */
 const database = new DAO("courses.sqlite");
-async function initDB() {
+(async () => {
     try {
+        if (await database.isInitialized() > 0) {
+            // Tables have already been created. No initialization is required
+            return;
+        }
+
+        // init database
         const data_createTables = fs.readFileSync('./dao/queries/createTables.sql').toString();
-        const data_deleteTables = fs.readFileSync('./dao/queries/deleteTables.sql').toString();
-        const data_insertRecords = fs.readFileSync('./dao/queries/populateDB.sql').toString();
+        const tables = data_createTables.split(';\n');
+        for (let query of tables) {
+            if (!!query) {
+                query += ";";
+                await database.runQuery(query);
+            }
+        }
+
         const data_triggers = fs.readFileSync('./dao/queries/triggers.sql').toString();
-
         const triggers = data_triggers.split('END;');
-        const insertQueries = data_insertRecords.split(';');
-        const createQueries = data_createTables.split(';');
-        const dropQueries = data_deleteTables.split(';');
+        for (let query of triggers) {
+            if (!!query) {
+                query += "END;";
+                await database.runQuery(query);
+            }
+        }
 
-        await database.dropTables(dropQueries);
-        await database.createTables(createQueries);
-        await database.setTriggers(triggers);
-        await database.populateDB(insertQueries);
+        const data_insertRecords = fs.readFileSync('./dao/queries/populateDB.sql').toString();
+        const records = data_insertRecords.split(';');
+        for (let query of records) {
+            if (!!query) {
+                query += ";";
+                await database.runQuery(query);
+            }
+        }
+
+
     }
     catch (err) {
         console.log(err);
     }
-}
-initDB();
+})();
 
 
 /* --- SETUP SERVER --- */
@@ -82,34 +102,37 @@ const isLoggedIn = (req, res, next) => {
 }
 
 /* --- API ---*/
+
+/* Session API */
 app.post(PATH + '/login', passport.authenticate('local'), (req, res) => {
     return res.status(201).json(req.user);
 });
 
 app.delete(PATH + '/logout', (req, res) => {
     req.logout(() => res.end());
-})
+});
 
 app.get(PATH + '/userInfo', isLoggedIn, (req, res) => {
     return res.status(201).json(req.user);
-})
+});
+/* ---------- */
 
+/* Courses API */
 app.get(PATH + '/courses', async (req, res) => {
     try {
         const courses = await database.getCourses();
         const incompatibleCourses = await database.getIncompatibleCourses();
-        const enrolledStudents = await database.getEnrolledStudents();
+
         courses.forEach((c) => {
             const inc = incompatibleCourses.filter((i) => i.courseCode === c.code).map((i) => i.incompatibleCode);
-            const stu = enrolledStudents.find((s) => s.courseID === c.code);
             c["incompatibleCourses"] = inc;
-            c["enrolledStudents"] = stu ? stu.enrolledStudents : 0;
-        })
+        });
+
         courses.sort((a, b) => { return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1 });
         return res.status(200).json(courses);
     }
     catch (err) {
-        console.log(err)
+        console.log(err);
         return res.status(503).json(err);
     }
 });
@@ -119,6 +142,31 @@ app.get(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
         const courses = await database.getStudyPlanByStudentID(req.user.id);
         courses.sort((a, b) => { return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1 });
         return res.status(200).json(courses);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(503).json(err);
+    }
+});
+
+app.post(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+    try {
+        await database.deleteStudyPlan(req.user.id);
+        await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);
+
+        return res.status(201).end();
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(503).json(err);
+    }
+});
+
+app.delete(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+    try {
+        await database.deleteStudyPlan(req.user.id);
+
+        return res.status(204).end();
     }
     catch (err) {
         console.log(err);
@@ -138,25 +186,15 @@ app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
     }
 });
 
-app.post(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+
+
+
+
+app.get(PATH + '/courses/enrolledstudents', isLoggedIn, async (req, res) => {
     try {
-
-        await database.deleteStudyPlan(req.user.id);
-        await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);
-
-        return res.status(201).end();
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(503).json(err);
-    }
-})
-
-app.delete(PATH + '/course/studyplan', isLoggedIn, async (req, res) => {
-    try {
-        await database.deleteStudyPlan(req.user.id);
-
-        return res.status(204).end();
+        const enrolledStudents = await database.getEnrolledStudents();
+        console.log(enrolledStudents);
+        return res.status(200).json(enrolledStudents);
     }
     catch (err) {
         console.log(err);

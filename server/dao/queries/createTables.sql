@@ -3,6 +3,7 @@ COURSE(
     code VARCHAR(7) NOT NULL,
     name TEXT NOT NULL,
     credits INTEGER NOT NULL,
+    enrolledStudents INTEGER,
     maxStudents INTEGER,
     preparatoryCourse VARCHAR(7),
     PRIMARY KEY(code)

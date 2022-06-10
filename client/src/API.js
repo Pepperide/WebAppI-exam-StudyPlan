@@ -131,7 +131,7 @@ async function storeUserStudyPlan(studyPlan) {
 }
 
 async function deleteUserStudyPlan() {
-    const url = APIURL + '/course/studyplan'
+    const url = APIURL + '/courses/studyplan'
     try {
         const response = await fetch(url, {
             method: 'DELETE',
@@ -151,6 +151,30 @@ async function deleteUserStudyPlan() {
         throw err;
     }
 }
+
+async function getEnrolledStudents() {
+    const url = APIURL + '/courses/enrolledstudents';
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const list = await response.json('');
+            return list;
+        }
+        else {
+            console.log(response.statusText);
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+}
 export {
     login,
     logout,
@@ -158,5 +182,6 @@ export {
     getStudyPlan,
     getStudentInfo,
     storeUserStudyPlan,
-    deleteUserStudyPlan
+    deleteUserStudyPlan,
+    getEnrolledStudents
 }

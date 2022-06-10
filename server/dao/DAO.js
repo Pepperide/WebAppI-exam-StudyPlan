@@ -8,88 +8,26 @@ class DAO {
         });
     }
 
-    dropTables(tables) {
+    isInitialized() {
         return new Promise((resolve, reject) => {
-            this.db.serialize(() => {
-                this.db.run("PRAGMA foreign_keys=OFF;");
-                this.db.run("BEGIN TRANSACTION;");
-                tables.forEach((q) => {
-                    if (q) {
-                        q += ";";
-                        this.db.run(q, (err) => {
-                            if (err) {
-                                console.log(err);
-                                reject(err);
-                            }
-                        });
-                    }
-                });
-                this.db.run("COMMIT;");
+            const sql =
+                `   SELECT COUNT(*) AS tables
+                    FROM sqlite_master 
+                    WHERE type='table';`;
+
+            this.db.get(sql, (err, row) => {
+                if (err) reject(err);
+                resolve(row.tables);
             });
-            resolve(true);
         });
     }
 
-    setTriggers(triggers) {
+    runQuery(sql) {
         return new Promise((resolve, reject) => {
-            this.db.serialize(() => {
-                triggers.forEach((t) => {
-                    if (t) {
-                        t += "END;";
-                        this.db.run(t, (err) => {
-                            if (err) {
-                                console.log("TRIGGER: " + err);
-                                reject(err);
-                            }
-                        });
-                    }
-                });
+            this.db.run(sql, (err) => {
+                if (err) reject(err);
+                resolve(true);
             });
-
-            resolve(true);
-        });
-    }
-
-    createTables(tables) {
-        return new Promise((resolve, reject) => {
-            this.db.serialize(() => {
-                this.db.run("PRAGMA foreign_keys=OFF;");
-                this.db.run("BEGIN TRANSACTION;");
-                tables.forEach((q) => {
-                    if (q) {
-                        q += ";";
-                        this.db.run(q, (err) => {
-                            if (err) {
-                                console.log(err);
-                                reject(err);
-                            }
-                        });
-                    }
-                });
-                this.db.run("COMMIT;");
-            });
-            resolve(true);
-        });
-    }
-
-    populateDB(queries) {
-        return new Promise((resolve, reject) => {
-            this.db.serialize(() => {
-                this.db.run("PRAGMA foreign_keys=OFF;");
-                this.db.run("BEGIN TRANSACTION;");
-                queries.forEach((q) => {
-                    if (q) {
-                        q += ";";
-                        this.db.run(q, (err) => {
-                            if (err) {
-                                reject(err);
-                            }
-                        });
-                    }
-                });
-                this.db.run("COMMIT;");
-            });
-            resolve(true);
         });
     }
 
@@ -134,8 +72,7 @@ class DAO {
         return new Promise((resolve, reject) => {
             const sql =
                 `   SELECT *
-                    FROM COURSE C
-                    WHERE C.code;`;
+                    FROM COURSE`;
 
             this.db.all(sql, (err, rows) => {
                 if (err)
@@ -227,8 +164,12 @@ class DAO {
                 this.db.run('BEGIN TRANSACTION;', (err) => { if (err) reject(err) });
 
                 courses.forEach((c) => {
+
                     this.db.run(sql, [studentID, c.code], (err) => {
-                        if (err) reject(err);
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        }
                     });
                 });
 
@@ -240,5 +181,6 @@ class DAO {
             resolve(true);
         })
     }
+
 }
 module.exports = DAO;
