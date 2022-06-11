@@ -88,6 +88,12 @@ div.shown {
     border-bottom-right-radius: 50px;
 }
 
+.hidden-div.disabled {
+    background-color: #8d8d8daf !important;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+
 .no-hover {
     pointer-events: none;
 }
@@ -114,30 +120,73 @@ div.shown {
 }
 
 
-/* .border-none {
-    border-width: 0px !important;
-    padding: 0px 0px 0px 0px !important;
-} */
+/* EDIT MODE */
+.disabled {
+    color: #8d8d8d !important;
+}
 
+.main table .table-col.disabled.open {
+    background-color: #8d8d8daf;
+    color: black !important;
+    transition: background-color .2s, color .2s;
+}
 
+.main table .table-col.disabled.close {
+    background-color: white;
+    transition: background-color .2s, color .2s;
+    transition-delay: .2s;
+}
 
+.main-table td:last-child.table-col.disabled.close {
+    background-color: white;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    transition: border-top-right-radius 0.2s, border-bottom-right-radius 0.2s, background-color 0s, color 0s;
+    transition-delay: .2s;
+}
+
+.main-table td:first-child.table-col.disabled.close {
+    background-color: white;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    transition: border-top-left-radius 0.2s, border-bottom-left-radius 0.2s, background-color 0s, color 0s;
+    transition-delay: .2s;
+}
+
+.main-table td:last-child.table-col.disabled.open {
+    background-color: #8d8d8daf;
+    color: black !important;
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.main-table td:first-child.table-col.disabled.open {
+    background-color: #8d8d8daf;
+    color: black !important;
+    border-top-left-radius: 50px !important;
+    border-bottom-left-radius: 0px !important;
+}
 
 #plus-button {
     color: rgb(0, 87, 0);
+    margin-left: 10px;
 }
 
 #dash-button {
     color: red;
+    margin-left: 10px;
 }
 
-.disabled {
-    color: #8d8d8d !important;
-}
+
 
 .table-row.view {
     cursor: pointer;
 }
 
-.prova:hover {
-    color: rgb(0, 0, 0.075) !important;
+.table-col.edit-mode.close {
+    color: rgb(1, 0, 39) !important;
+}
+
+.table-col.edit-mode.open {
+    color: white !important;
 }

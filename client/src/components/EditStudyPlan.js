@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { Col, Container, Row, Button, Form, Table, Alert, ThemeProvider } from 'react-bootstrap'
-import { Prev } from 'react-bootstrap/esm/PageItem';
+import { Col, Container, Row, Button, Form, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
-import { getEnrolledStudents, getStudentInfo } from '../API';
+import { getStudentInfo } from '../API';
 import UserContext from '../UserContext';
 import './css/CreateStudyPlan.css'
 import StudyPlanTable from './StudyPlanTable';
@@ -11,7 +10,6 @@ function EditStudyPlan(props) {
     const [workload, setWorkload] = useState({});
     const [added, setAdded] = useState(0);
     const [message, setMessage] = useState('');
-    const [oldStudyPlan, setOldStudyPlan] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,7 +20,6 @@ function EditStudyPlan(props) {
                 setWorkload(w);
             }
         })();
-        setOldStudyPlan(props.studyPlan);
     }, []);
 
     useEffect(() => {
@@ -38,12 +35,12 @@ function EditStudyPlan(props) {
         const mandatory = props.studyPlan.find((s) => s.code === course.preparatoryCourse);
 
         if (!!incompatible) {
-            setMessage(`"${course.name}" is incompatible with "${incompatible.name}"`);
+            setMessage({ header: "Incompatible courses", msg: `"${course.name}" is incompatible with "${incompatible.name}"` });
             return;
         }
 
         if (!!course.preparatoryCourse && !!mandatory === false) {
-            setMessage(`"You need to insert "${course.preparatoryCourse}" before "${course.name}"`);
+            setMessage({ header: "Preparatory course constraint", msg: `You need to insert "${course.preparatoryCourse}" before "${course.name}"` });
             return;
         }
         props.addCourseToStudyPlan(course);
@@ -53,7 +50,7 @@ function EditStudyPlan(props) {
         const mandatory = props.studyPlan.find((s) => s.preparatoryCourse === course.code);
 
         if (!!mandatory) {
-            setMessage(`"You cannot delete "${course.name}" because is mandatory for "${mandatory.name}"`);
+            setMessage({ header: "Preparatory course constraint", msg: `You cannot delete "${course.name}" because is mandatory for "${mandatory.name}"` });
             return;
         }
         props.removeCourseFromStudyPlan(course);
@@ -64,7 +61,7 @@ function EditStudyPlan(props) {
             .filter((course) => props.courses.some((e) => (course.maxStudents && e.code === course.code && e.enrolledStudents >= course.maxStudents)));
 
         if (errorCourses.length > 0) {
-            setMessage(`Unable to add the following courses:\n${errorCourses.map((c) => { return c.code + '\n' })}`);
+            setMessage({ header: "Generic error", msg: `Following courses have reached the maximum number of students:\n${errorCourses.map((c) => { return c.code + '\n' })}` });
             return;
         }
 
@@ -73,12 +70,11 @@ function EditStudyPlan(props) {
             handleNavigation('../');
         }
         else {
-            setMessage(`Workload error. You have to chose at least ${workload.min} and at most ${workload.max} credits`);
+            setMessage({ header: "Workload error", msg: `You have to chose at least ${workload.min} and at most ${workload.max} credits` });
         }
     }
 
     const handleDeleteStudyPlan = () => {
-        setOldStudyPlan([]);
         setWorkload({});
         setAdded(0);
         props.deleteStudyPlan();
@@ -86,7 +82,7 @@ function EditStudyPlan(props) {
     }
 
     const cancelOperations = () => {
-        props.setStudyPlan(oldStudyPlan);
+        props.loadStudyPlan();
         handleNavigation('../');
     }
 
@@ -94,21 +90,9 @@ function EditStudyPlan(props) {
         <>
             <Container fluid style={{ width: "80%", height: "100%" }}>
                 <Row className="base-layer d-flex justify-content-around">
-                    <Row>
-                        <Col>
-                            <h2 className="subtitle">Create your study plan</h2>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <h3 className="subtitle">Set the workload</h3>
-                        </Col>
-                    </Row>
                     {workload.value === undefined ?
-                        <Row>
-                            <SetWorkload setWorkload={setWorkload} />
-                        </Row> :
-                        <>
+                        <SetWorkload setWorkload={setWorkload} />
+                        : <>
                             <Row>
                                 <Col>
                                     <i className="workload-text">{workload.value} workload: </i>
@@ -117,21 +101,28 @@ function EditStudyPlan(props) {
                                     <i className="workload-text">/{workload.max} </i>
                                     <i>&#123;min:{workload.min}, max:{workload.max}&#125;</i>
                                 </Col>
-                                <Col className="d-flex justify-content-end">
-                                    <Button variant="danger" className="align-self-center" onClick={() => handleDeleteStudyPlan()}>Delete</Button>
-                                    <Button className="align-self-center" onClick={() => cancelOperations()}>Cancel</Button>
-                                    <Button variant="secondary" className="align-self-center" onClick={() => handleSubmit()}>Submit study plan</Button>
-                                </Col>
+
                             </Row>
                             <Row>
                                 <Col className="align-self-center">
-                                    {!!message && <Alert variant={'danger'} onClose={() => setMessage('')} dismissible><p>{message}</p></Alert>}
+                                    {!!message &&
+                                        <Alert variant={'danger'} onClose={() => setMessage('')} dismissible>
+                                            <Alert.Heading>{message.header}</Alert.Heading>
+                                            <p>{message.msg}</p>
+                                        </Alert>}
                                 </Col>
                             </Row>
                             <Row>
                                 <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
                             </Row>
                             <Row>
+                                <Col className="d-flex justify-content-end">
+                                    <Button id="delete" variant="danger" className="align-self-center" onClick={() => handleDeleteStudyPlan()}>Delete</Button>
+                                    <Button id="cancel" variant="secondary" className="align-self-center" onClick={() => cancelOperations()}>Cancel</Button>
+                                    <Button id="submit" variant="primary" className="align-self-center" onClick={() => handleSubmit()}>Submit study plan</Button>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "15px" }}>
                                 <StudyPlanTable
                                     courses={props.courses}
                                     studyPlan={props.studyPlan}
@@ -166,6 +157,16 @@ function SetWorkload(props) {
     }
     return (
         <>
+            <Row>
+                <Col>
+                    <h2 className="subtitle black">Create your study plan</h2>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <h3 className="subtitle black">Set the workload</h3>
+                </Col>
+            </Row>
             <Form >
                 <Row className="mb-3">
                     <Col className="d-flex justify-content-center">

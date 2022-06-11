@@ -1,6 +1,4 @@
-import { Container, Row, Col, Alert } from 'react-bootstrap'
-import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom';
-import CreateStudyPlanView from './CreateStudyPlan';
+import { Container, Row, Alert } from 'react-bootstrap'
 import StudyPlanTable from './StudyPlanTable';
 
 function LoggedInView(props) {
@@ -16,12 +14,16 @@ function LoggedInView(props) {
 
 
                 {props.studyPlan.length > 0 && <>
-                    <h2>Your study plan</h2>
-                    <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
+                    <h2 className="title">Your Study Plan</h2>
+                    <Container className="table-frame">
+                        <StudyPlanTable courses={props.studyPlan} mode={'lite'} />
+                    </Container>
                 </>}
 
-                <h2>Course list</h2>
-                <StudyPlanTable courses={props.courses} mode={'view'} />
+                <h2 className="title">PoliTo Course list</h2>
+                <Container className="table-frame">
+                    <StudyPlanTable courses={props.courses} mode={'view'} />
+                </Container>
 
             </Container>
         </>

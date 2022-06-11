@@ -2,10 +2,15 @@
     background-color: white;
     height: 70%;
     border-radius: 50px;
+    padding-top: 20px;
 }
 
 .subtitle {
     text-align: center;
+}
+
+.subtitle.black {
+    color: black;
 }
 
 .study-plan-view-button {
@@ -31,4 +36,8 @@
 .workload-text.error {
     font-size: 15px;
     color: red;
+}
+
+button {
+    margin: 0px 5px 0px 5px;
 }

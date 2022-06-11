@@ -12,6 +12,11 @@ function NavBar(props) {
     const navigate = useNavigate();
     const user = useContext(UserContext);
 
+    const goHome = (home) => {
+        props.loadStudyPlan();
+        navigate(home);
+    }
+
     const handleNavigation = (path) => {
         navigate(path);
     }
@@ -33,10 +38,10 @@ function NavBar(props) {
                                 <Nav className="me-auto">
                                     {props.loggedIn ?
                                         <Nav.Item as="li">
-                                            <Nav.Link className="action-item" onClick={() => { handleNavigation('/user/' + user.id) }}>Home</Nav.Link>
+                                            <Nav.Link className="action-item" onClick={() => { goHome('/user/' + user.id) }}>Home</Nav.Link>
                                         </Nav.Item> :
                                         <Nav.Item as="li">
-                                            <Nav.Link className="action-item" onClick={() => { handleNavigation('/') }}>Home</Nav.Link>
+                                            <Nav.Link className="action-item" onClick={() => { goHome('/') }}>Home</Nav.Link>
                                         </Nav.Item>
                                     }
 

@@ -30,12 +30,6 @@ function App() {
     setStudyPlan(list);
   }
 
-  useEffect(() => {
-    loadCourses();
-    if (loggedIn === true)
-      loadStudyPlan();
-  }, [loggedIn]);
-
   const addCourseToStudyPlan = (course) => {
     setStudyPlan((old) => [...old, course]);
   }
@@ -47,6 +41,12 @@ function App() {
 
   const storeStudyPlan = async (workload) => {
     await storeUserStudyPlan({ studyPlan, workload });
+    loadCourses();
+  }
+
+  const deleteStudyPlan = async () => {
+    await deleteUserStudyPlan();
+    loadStudyPlan();
     loadCourses();
   }
 
@@ -72,11 +72,11 @@ function App() {
     setStudyPlan([]);
   }
 
-  const deleteStudyPlan = async () => {
-    await deleteUserStudyPlan();
-    loadStudyPlan();
+  useEffect(() => {
     loadCourses();
-  }
+    if (loggedIn === true)
+      loadStudyPlan();
+  }, [loggedIn]);
 
   return (
     <>
@@ -88,30 +88,30 @@ function App() {
               <LoginRoute userLoginCallback={handleLogin} message={message} setMessage={setMessage} loggedIn={loggedIn} />
             } />
 
-            <Route path='/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
+            <Route path='/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} loadStudyPlan={loadStudyPlan} />}>
               <Route path='' element={<NotLoggedInView courses={allCourses} mode={"view"} />} />
             </Route>
 
-            <Route path='/user/:userID/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} />}>
+            <Route path='/user/:userID/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} loadStudyPlan={loadStudyPlan} />}>
               <Route path='' element={<LoggedInView courses={allCourses} studyPlan={studyPlan} message={message} setMessage={setMessage} />} />
               <Route path='studyplan/add' element={
                 <EditStudyPlan
                   courses={allCourses}
                   studyPlan={studyPlan}
-                  setStudyPlan={setStudyPlan}
                   addCourseToStudyPlan={addCourseToStudyPlan}
                   removeCourseFromStudyPlan={removeCourseFromStudyPlan}
                   storeStudyPlan={storeStudyPlan}
-                  deleteStudyPlan={deleteStudyPlan} />} />
+                  deleteStudyPlan={deleteStudyPlan}
+                  loadStudyPlan={loadStudyPlan} />} />
               <Route path='studyplan/edit' element={
                 <EditStudyPlan
                   courses={allCourses}
                   studyPlan={studyPlan}
-                  setStudyPlan={setStudyPlan}
                   addCourseToStudyPlan={addCourseToStudyPlan}
                   removeCourseFromStudyPlan={removeCourseFromStudyPlan}
                   storeStudyPlan={storeStudyPlan}
-                  deleteStudyPlan={deleteStudyPlan} />} />
+                  deleteStudyPlan={deleteStudyPlan}
+                  loadStudyPlan={loadStudyPlan} />} />
             </Route>
 
           </Routes>
