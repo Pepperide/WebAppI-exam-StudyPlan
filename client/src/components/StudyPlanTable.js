@@ -78,7 +78,7 @@ function TableRow(props) {
             // !!incompatible ? setDisabled(true) : setDisabled(false);
             !!props.studyPlan.find((s) => s.code === props.course.code) ? setInserted(true) : setInserted(false);
         }
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.studyPlan]);
 
     const addCourse = () => {

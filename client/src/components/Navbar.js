@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
+import { Navbar, Nav, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import UserContext from '../UserContext';
@@ -99,10 +99,10 @@ function Titlebar(props) {
         <>
             <Row className='headerbar'>
                 <Col className="d-flex">
-                    <img id='logoPolito' src={politoLogo} />
+                    <img id='logoPolito' src={politoLogo} alt='' />
                 </Col>
                 <Col>
-                    <a id='navbarTitle' className="title d-flex justify-content-end"> Portale della Didattica </a>
+                    <span id='navbarTitle' className="title d-flex justify-content-end"> Portale della Didattica </span>
                 </Col>
             </Row>
         </>

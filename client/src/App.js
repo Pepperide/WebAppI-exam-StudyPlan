@@ -76,6 +76,8 @@ function App() {
     loadCourses();
     if (loggedIn === true)
       loadStudyPlan();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn]);
 
   return (

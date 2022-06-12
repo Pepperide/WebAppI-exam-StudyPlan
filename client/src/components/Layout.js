@@ -19,6 +19,7 @@ function Layout(props) {
         else {
             navigate('/user/' + user.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.loggedIn]);
 
     return (

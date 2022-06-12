@@ -13,6 +13,7 @@ function LoginRoute(props) {
         if (props.loggedIn) {
             navigate('/user/' + user.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.loggedIn]);
 
     return (
@@ -23,7 +24,7 @@ function LoginRoute(props) {
             <div className='d-flex loginView'>
                 <Row className="align-self-center mainContent">
                     <Col>
-                        <img id="loginLogoPolito" src={logo} />
+                        <img id="loginLogoPolito" src={logo} alt='' />
                     </Col>
                     <Col className="d-flex justify-content-center">
                         <LoginForm userLoginCallback={props.userLoginCallback} loggedIn={props.loggedIn} />
