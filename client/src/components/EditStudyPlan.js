@@ -191,7 +191,7 @@ function SetWorkload(props) {
             </Form>
             <Row className="d-flex justify-content-around">
                 <Col className="d-flex justify-content-center">
-                    <Button className="study-plan-view-button" onClick={() => handleNavigation('/user/' + user.id + '/studyplan')}>Cancel</Button>
+                    <Button className="study-plan-view-button" onClick={() => handleNavigation('/user/' + user.id)}>Cancel</Button>
                 </Col>
                 <Col className="d-flex justify-content-center">
                     <Button className="study-plan-view-button" onClick={() => goOn()}>Next</Button>
