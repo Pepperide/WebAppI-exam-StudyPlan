@@ -175,6 +175,30 @@ async function getEnrolledStudents() {
         throw err;
     }
 }
+
+async function getUserInfo() {
+    const url = APIURL + '/userInfo';
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+            return user;
+        }
+        else {
+            console.log(response.statusText);
+            const text = await response.text();
+            throw new TypeError(text);
+        }
+    }
+    catch (err) {
+        // network error
+        console.log(err);
+        throw err;
+    }
+}
 export {
     login,
     logout,
@@ -183,5 +207,6 @@ export {
     getStudentInfo,
     storeUserStudyPlan,
     deleteUserStudyPlan,
-    getEnrolledStudents
+    getEnrolledStudents,
+    getUserInfo
 }

@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { Container, Row, Alert } from 'react-bootstrap'
+import { getUserInfo } from '../API';
 import StudyPlanTable from './StudyPlanTable';
 
 function LoggedInView(props) {
+    useEffect(() => {
+        (async () => {
+            const u = await getUserInfo();
+            props.setUser(u);
+        })();
+    }, []);
+
     return (
         <>
             <Container fluid style={{ height: "100%" }}>

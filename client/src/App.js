@@ -103,7 +103,7 @@ function App() {
             </Route>
 
             <Route path='/user/:userID/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} loadStudyPlan={loadStudyPlan} />}>
-              <Route path='' element={<LoggedInView courses={allCourses} studyPlan={studyPlan} message={message} setMessage={setMessage} />} />
+              <Route path='' element={<LoggedInView courses={allCourses} studyPlan={studyPlan} message={message} setMessage={setMessage} setUser={setUser} />} />
               <Route path='studyplan/add' element={
                 <EditStudyPlan
                   courses={allCourses}

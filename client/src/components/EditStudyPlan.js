@@ -93,7 +93,7 @@ function EditStudyPlan(props) {
 
     return (
         <>
-            <Container fluid style={{ width: "80%", height: "100%" }}>
+            <Container fluid className="table-frame" style={{ width: "80%", height: "100%" }}>
                 <Row className="base-layer d-flex justify-content-around">
                     {workload.value === undefined ?
                         <SetWorkload setWorkload={setWorkload} />
