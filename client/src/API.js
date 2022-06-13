@@ -152,30 +152,6 @@ async function deleteUserStudyPlan() {
     }
 }
 
-async function getEnrolledStudents() {
-    const url = APIURL + '/courses/enrolledstudents';
-    try {
-        const response = await fetch(url, {
-            credentials: 'include',
-        });
-
-        if (response.ok) {
-            const list = await response.json('');
-            return list;
-        }
-        else {
-            console.log(response.statusText);
-            const text = await response.text();
-            throw new TypeError(text);
-        }
-    }
-    catch (err) {
-        // network error
-        console.log(err);
-        throw err;
-    }
-}
-
 async function getUserInfo() {
     const url = APIURL + '/userInfo';
     try {
@@ -207,6 +183,5 @@ export {
     getStudentInfo,
     storeUserStudyPlan,
     deleteUserStudyPlan,
-    getEnrolledStudents,
     getUserInfo
 }
