@@ -19,6 +19,7 @@ function App() {
   const [user, setUser] = useState({});
   const [allCourses, setAllCourses] = useState([]);
   const [studyPlan, setStudyPlan] = useState([]);
+  const [oldStudyPlan, setOldStudyPlan] = useState([]);
 
   const loadCourses = async () => {
     const list = await getCourses();
@@ -27,6 +28,7 @@ function App() {
 
   const loadStudyPlan = async () => {
     const list = await getStudyPlan(user.id);
+    setOldStudyPlan(list);
     setStudyPlan(list);
   }
 
@@ -106,6 +108,7 @@ function App() {
                 <EditStudyPlan
                   courses={allCourses}
                   studyPlan={studyPlan}
+                  oldStudyPlan={oldStudyPlan}
                   addCourseToStudyPlan={addCourseToStudyPlan}
                   removeCourseFromStudyPlan={removeCourseFromStudyPlan}
                   storeStudyPlan={storeStudyPlan}
@@ -115,6 +118,7 @@ function App() {
                 <EditStudyPlan
                   courses={allCourses}
                   studyPlan={studyPlan}
+                  oldStudyPlan={oldStudyPlan}
                   addCourseToStudyPlan={addCourseToStudyPlan}
                   removeCourseFromStudyPlan={removeCourseFromStudyPlan}
                   storeStudyPlan={storeStudyPlan}

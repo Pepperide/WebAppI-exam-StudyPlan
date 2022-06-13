@@ -6,7 +6,8 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const fs = require('fs');
 
-const DAO = require('./dao/DAO')
+const DAO = require('./dao/DAO');
+const { isFunction } = require('util');
 
 
 /* --- START DATABASE --- */
@@ -101,6 +102,47 @@ const isLoggedIn = (req, res, next) => {
     return res.status(401).json({ error: 'Not authorized' });
 }
 
+const isCorrect = async (req, res, next) => {
+    const courses = await database.getCourses();
+    const oldStudyPlan = await database.getStudyPlanByStudentID(req.user.id);
+    const studyPlan = req.body.studyPlan;
+    const student = await database.getStudentByID(req.user.id);
+
+    // Max students Validation
+    const coursesToBeCheck = studyPlan.filter((c) => oldStudyPlan.map((p) => p.code).indexOf(c.code) === -1);
+
+    coursesToBeCheck.forEach((course) => {
+        const c = courses.find((c) => c.code === course.code);
+        if (c.maxStudents && c.enrolledStudents >= c.maxStudents) {
+            console.log(c)
+            return res.status(422).json({ error: 'Max enrolled students has been reached' });
+        }
+    });
+
+    // Workload validation
+    const credits = studyPlan.reduce((pre, curr) => { pre + curr.credits }, 0);
+    if (student.workload === 'part-time' && (credits < 20 || credits > 40))
+        return res.status(422).json({ error: 'Workload error' });
+    else if (student.workload === 'full-time' && (credits < 60 || credits > 80))
+        return res.status(422).json({ error: 'Workload error' });
+
+
+
+    studyPlan.forEach((s) => {
+        if (!!s.preparatoryCourse && !studyPlan.some((sp) => sp.code === s.preparatoryCourse))
+            return res.status(422).json({ error: 'Missing preparatory course' });
+
+        if (!!s.incompatibleCourses) {
+            s.incompatibleCourses.forEach((inc) => {
+                if (studyPlan.some((c) => c.code === inc))
+                    return res.status(422).json({ error: 'Found incompatible courses' });
+            });
+        }
+    });
+
+    return next();
+}
+
 /* --- API ---*/
 
 /* Session API */
@@ -149,7 +191,7 @@ app.get(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
     }
 });
 
-app.post(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
+app.post(PATH + '/courses/studyplan', isLoggedIn, isCorrect, async (req, res) => {
     try {
         await database.deleteStudyPlan(req.user.id);
         await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);

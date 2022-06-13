@@ -57,8 +57,13 @@ function EditStudyPlan(props) {
     }
 
     const handleSubmit = async () => {
-        const errorCourses = props.studyPlan
-            .filter((course) => props.courses.some((e) => (course.maxStudents && e.code === course.code && e.enrolledStudents >= course.maxStudents)));
+        // Max enrolled students check
+        const coursesToBeCheck = props.studyPlan.filter((c) => props.oldStudyPlan.map((p) => p.code).indexOf(c.code) === -1);
+        const errorCourses = coursesToBeCheck
+            .filter((course) =>
+                props.courses.some((e) => (
+                    course.maxStudents && e.code === course.code && e.enrolledStudents >= course.maxStudents
+                )));
 
         if (errorCourses.length > 0) {
             setMessage({ header: "Generic error", msg: `Following courses have reached the maximum number of students:\n${errorCourses.map((c) => { return c.code + '\n' })}` });
