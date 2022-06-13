@@ -92,6 +92,12 @@ function App() {
 
             <Route path='/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} loadStudyPlan={loadStudyPlan} />}>
               <Route path='' element={<NotLoggedInView courses={allCourses} mode={"view"} />} />
+              <Route path="*" element={
+                <div style={{ color: "white" }}>
+                  <h2>404 Page not found</h2>
+
+                </div>
+              } />
             </Route>
 
             <Route path='/user/:userID/' element={<Layout loggedIn={loggedIn} handleLogout={handleLogout} studyPlan={studyPlan} loadStudyPlan={loadStudyPlan} />}>
@@ -114,8 +120,13 @@ function App() {
                   storeStudyPlan={storeStudyPlan}
                   deleteStudyPlan={deleteStudyPlan}
                   loadStudyPlan={loadStudyPlan} />} />
-            </Route>
+              <Route path="*" element={
+                <div style={{ color: "white" }}>
+                  <h2>404 Page not found</h2>
 
+                </div>
+              } />
+            </Route>
           </Routes>
         </Router>
       </UserContext.Provider>

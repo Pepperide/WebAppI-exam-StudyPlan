@@ -252,7 +252,7 @@
 - `EditStudyPlan` (in `EditStudyPlan.js`):
   - *It shows course table and study plan table of the current user and handle the editing of the study plan*
 - `SetWorkload` (in `EditStudyPlan.js`):
- - *It allows to set the student workload if not present*
+  - *It allows to set the student workload if not present*
 
 - `Layout` (in `Layout.js`):
   - *Base layout for the web app*
@@ -273,7 +273,7 @@
   - *The component in which course attributes are shown*
 
 - `HiddenTable` (in `StudyPlanTable.js`):
- - *The table that contains course info. It will be shown when a `TableRow` row will be clicked*
+  - *The table that contains course info. It will be shown when a `TableRow` row will be clicked*
 
 ## Screenshot
 
