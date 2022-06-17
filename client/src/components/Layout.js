@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Container } from 'react-bootstrap';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import NavBar from "./Navbar";
 import UserContext from "../UserContext";
@@ -11,7 +11,6 @@ import './css/Layout.css'
 function Layout(props) {
     const user = useContext(UserContext);
     const navigate = useNavigate();
-    const { userID } = useParams();
 
     useEffect(() => {
         if (props.loggedIn) {

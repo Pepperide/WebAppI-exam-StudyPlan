@@ -1,12 +1,10 @@
 import { Form, Button, Col, Row, Alert } from 'react-bootstrap'
 import './css/Authentication.css'
 import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
-import UserContext from '../UserContext';
+import { useEffect, useState } from 'react';
 const logo = require('../data/Logo_PoliTo_dal_2021_blu.png')
 
 function LoginRoute(props) {
-    const user = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
