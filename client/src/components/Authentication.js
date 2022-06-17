@@ -11,7 +11,7 @@ function LoginRoute(props) {
 
     useEffect(() => {
         if (props.loggedIn) {
-            navigate('/user/' + user.id);
+            navigate('/');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.loggedIn]);

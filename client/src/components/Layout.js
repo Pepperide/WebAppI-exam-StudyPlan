@@ -14,11 +14,11 @@ function Layout(props) {
     const { userID } = useParams();
 
     useEffect(() => {
-        if (!props.loggedIn) {
-            userID === user.id ? navigate('/') : navigate('/unauthorized')
+        if (props.loggedIn) {
+            navigate('/user/' + user.id);
         }
         else {
-            navigate('/user/' + user.id);
+            navigate('/');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.loggedIn]);

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import UserContext from './UserContext';
-import { deleteUserStudyPlan, getCourses, getStudyPlan, login, logout, storeUserStudyPlan } from './API';
+import { deleteUserStudyPlan, getCourses, getStudyPlan, getUserInfo, login, logout, storeUserStudyPlan } from './API';
 
 import { LoginRoute } from './components/Authentication';
 import Layout from './components/Layout';
@@ -75,10 +75,30 @@ function App() {
   }
 
   useEffect(() => {
-    loadCourses();
-    if (loggedIn === true)
-      loadStudyPlan();
+    const userInfo = async () => {
+      try {
+        const u = await getUserInfo();
+        setLoggedIn(true);
+        setUser(u);
+      }
+      catch (err) {
+        setLoggedIn(false);
+        setMessage('');
+        setUser({});
+        setStudyPlan([]);
+      }
+    }
 
+    userInfo();
+
+  }, []);
+
+  useEffect(() => {
+    loadCourses();
+
+    if (loggedIn) {
+      loadStudyPlan();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn]);
 
@@ -131,6 +151,7 @@ function App() {
                 </div>
               } />
             </Route>
+
           </Routes>
         </Router>
       </UserContext.Provider>
