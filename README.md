@@ -60,8 +60,8 @@
 - **Request body**: 
 ```
   {
-    username: testuser@studenti.polito.it
-    password: testpassword
+    username: mario@studenti.polito.it
+    password: password
   }
 ```
 - **Response body**: 201 CREATED
