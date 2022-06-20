@@ -42,8 +42,14 @@ function App() {
   }
 
   const storeStudyPlan = async (workload) => {
-    await storeUserStudyPlan({ studyPlan, workload });
-    loadCourses();
+    try {
+      await storeUserStudyPlan({ studyPlan, workload });
+    }
+    catch {
+      loadStudyPlan();
+      loadCourses();
+    }
+
   }
 
   const deleteStudyPlan = async () => {

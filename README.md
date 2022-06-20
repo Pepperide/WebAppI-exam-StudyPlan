@@ -101,7 +101,7 @@
   - **Request header**: none
   - **Request params**: none
   - **Request body**: none
-  - **Response body**: 200 OK
+  - **Response body**: 200 OK, 500 INTERNAL SERVER ERROR
 ```
 [
   {
@@ -132,7 +132,7 @@
   - **Request header**: none
   - **Request params**: none
   - **Request body**: none
-  - **Response body**: 200 OK
+  - **Response body**: 200 OK, 500 INTERNAL SERVER ERROR
 ```
   [
     {
@@ -175,7 +175,8 @@
       {
         "code":"01UDFOV",
         "name":"Applicazioni Web I",
-        "credits":6,"enrolledStudents":0,
+        "credits":6,
+        "enrolledStudents":0,
         "maxStudents":null,
         "preparatoryCourse":null,
         "incompatibleCourses":["01TXYOV"]
@@ -194,21 +195,21 @@
     "workload":"part-time"
   }
 ```
-  - **Response body**: 201 CREATED
+  - **Response body**: 201 CREATED, 422 UNPROCESSABLE ENTITY, 404 NOT FOUND, 500 INTERNAL SERVER ERROR
 
 - **DELETE `/api/v1/courses/studyplan`**:
   - **Delete study plan of the current user**
   - **Request header**: none
   - **Request params**: none
   - **Request body**: none
-  - **Response body**: 204 NO CONTENT
+  - **Response body**: 204 NO CONTENT, 503 SERVICE UNAVAILABLE
 
 - **GET `/api/v1/studentInfo`**:
   - **Get student info of the current user**
   - **Request header**: none
   - **Request params**: none
   - **Request body**: none
-  - **Response body**: 200 OK
+  - **Response body**: 200 OK, 500 INTERNAL SERVER ERROR
 ```
   {
     studentID: 1,
