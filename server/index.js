@@ -107,6 +107,18 @@ const isCorrect = async (req, res, next) => {
     const oldStudyPlan = await database.getStudyPlanByStudentID(req.user.id);
     const studyPlan = req.body.studyPlan;
     const student = await database.getStudentByID(req.user.id);
+    const error = {};
+
+    const setError = (status, msg) => {
+        error.status = status;
+        error.msg = msg;
+    }
+
+    studyPlan.forEach((s) => {
+        if (!courses.some((c) => c.code === s.code)) {
+            setError(404, "Course doesn't exist");
+        }
+    });
 
     // Max students Validation
     const coursesToBeCheck = studyPlan.filter((c) => oldStudyPlan.map((p) => p.code).indexOf(c.code) === -1);
@@ -114,30 +126,38 @@ const isCorrect = async (req, res, next) => {
     coursesToBeCheck.forEach((course) => {
         const c = courses.find((c) => c.code === course.code);
         if (c.maxStudents && c.enrolledStudents >= c.maxStudents) {
-            return res.status(422).json({ error: 'Max enrolled students has been reached' });
+            setError(422, 'Max enrolled students has been reached');
+
         }
     });
+
 
     // Workload validation
     const credits = studyPlan.reduce((pre, curr) => { pre + curr.credits }, 0);
     if (student.workload === 'part-time' && (credits < 20 || credits > 40))
-        return res.status(422).json({ error: 'Workload error' });
+        setError(422, 'Workload error');
+
     else if (student.workload === 'full-time' && (credits < 60 || credits > 80))
-        return res.status(422).json({ error: 'Workload error' });
+        setError(422, 'Workload error');
+
 
     studyPlan.forEach((s) => {
         if (!!s.preparatoryCourse && !studyPlan.some((sp) => sp.code === s.preparatoryCourse))
-            return res.status(422).json({ error: 'Missing preparatory course' });
+            setError(422, 'Missing preparatory course');
+
 
         if (!!s.incompatibleCourses) {
             s.incompatibleCourses.forEach((inc) => {
                 if (studyPlan.some((c) => c.code === inc))
-                    return res.status(422).json({ error: 'Found incompatible courses' });
+                    setError(422, 'Found incompatible courses');
+
             });
         }
     });
+    if (error.status)
+        return res.status(error.status).json(error.msg);
 
-    return next();
+    else return next();
 }
 
 /* --- API ---*/
@@ -198,6 +218,7 @@ app.post(PATH + '/courses/studyplan',
     body("studyPlan.*.maxStudents").isInt().optional({ nullable: true }),
     body("studyPlan.*.preparatoryCourse").isAlphanumeric().isLength({ min: 7, max: 7 }).optional({ nullable: true }),
     body("studyPlan.*.incompatibleCourses").isArray(),
+    body("workload").isIn(["part-time", "full-time"]),
     isCorrect,
     async (req, res) => {
         try {
