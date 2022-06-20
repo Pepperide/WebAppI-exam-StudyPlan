@@ -90,7 +90,7 @@
 ```
   {
     id: 1,
-    username: testuser@studenti.polito.it,
+    username: mario@studenti.polito.it,
     name: Mario,
     surname: Rossi
   }
