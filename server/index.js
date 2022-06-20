@@ -198,7 +198,15 @@ app.get(PATH + '/courses', async (req, res) => {
 
 app.get(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
     try {
-        const courses = await database.getStudyPlanByStudentID(req.user.id);
+        const allCourses = await database.getCourses();
+        const incompatibleCourses = await database.getIncompatibleCourses();
+        allCourses.forEach((c) => {
+            const inc = incompatibleCourses.filter((i) => i.courseCode === c.code).map((i) => i.incompatibleCode);
+            c["incompatibleCourses"] = inc;
+        });
+
+        const studyPlan = await database.getStudyPlanByStudentID(req.user.id);
+        const courses = allCourses.filter((c) => studyPlan.some((s) => s.code === c.code));
         courses.sort((a, b) => { return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1 });
         return res.status(200).json(courses);
     }

@@ -136,27 +136,24 @@
 ```
   [
     {
-      "code":"01SQOOV",
-      "name":"Reti Locali e Data Center",
-      "credits":6,
-      "enrolledStudents":1,
+      "code":"02GOLOV",
+      "name":"Architetture dei sistemi di elaborazione",
+      "credits":12,"enrolledStudents":4,
       "maxStudents":null,
       "preparatoryCourse":null,
-      "studentID":1,
-      "courseID":"01SQOOV"
+      "incompatibleCourses":["02LSEOV"]
     },
     {
-      "code":"04GSPOV",
-      "name":"Software engineering",
-      "credits":6,
-      "enrolledStudents":1,
+      "code":"03UEWOV",
+      "name":"Challenge",
+      "credits":5,
+      "enrolledStudents":3,
       "maxStudents":null,
-      "preparatoryCourse":"02LSEOV",
-      "studentID":1,
-      "courseID":"04GSPOV"
+      "preparatoryCourse":null,
+      "incompatibleCourses":[]
     },
     ...
-]
+  ]
 ```
 
 - **POST `/api/v1/courses/studyplan`**:

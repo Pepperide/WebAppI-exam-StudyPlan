@@ -100,7 +100,7 @@ class DAO {
     getStudyPlanByStudentID(studentID) {
         return new Promise((resolve, reject) => {
             const sql =
-                `   SELECT *
+                `   SELECT C.code
                     FROM COURSE C, ENROLLED_STUDENTS E
                     WHERE C.code=E.courseID AND E.studentID=?`;
             this.db.all(sql, [studentID], (err, rows) => {
