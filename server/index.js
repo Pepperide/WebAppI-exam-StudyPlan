@@ -7,7 +7,7 @@ const session = require('express-session');
 const fs = require('fs');
 
 const DAO = require('./dao/DAO');
-const { isFunction } = require('util');
+const { body, validationResult } = require('express-validator');
 
 
 /* --- START DATABASE --- */
@@ -114,7 +114,6 @@ const isCorrect = async (req, res, next) => {
     coursesToBeCheck.forEach((course) => {
         const c = courses.find((c) => c.code === course.code);
         if (c.maxStudents && c.enrolledStudents >= c.maxStudents) {
-            console.log(c)
             return res.status(422).json({ error: 'Max enrolled students has been reached' });
         }
     });
@@ -125,8 +124,6 @@ const isCorrect = async (req, res, next) => {
         return res.status(422).json({ error: 'Workload error' });
     else if (student.workload === 'full-time' && (credits < 60 || credits > 80))
         return res.status(422).json({ error: 'Workload error' });
-
-
 
     studyPlan.forEach((s) => {
         if (!!s.preparatoryCourse && !studyPlan.some((sp) => sp.code === s.preparatoryCourse))
@@ -155,7 +152,7 @@ app.delete(PATH + '/logout', (req, res) => {
 });
 
 app.get(PATH + '/userInfo', isLoggedIn, (req, res) => {
-    return res.status(201).json(req.user);
+    return res.status(200).json(req.user);
 });
 /* ---------- */
 
@@ -175,7 +172,7 @@ app.get(PATH + '/courses', async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status(503).json(err);
+        return res.status(500).json(err);
     }
 });
 
@@ -187,22 +184,36 @@ app.get(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status(503).json(err);
+        return res.status(500).json(err);
     }
 });
 
-app.post(PATH + '/courses/studyplan', isLoggedIn, isCorrect, async (req, res) => {
-    try {
-        await database.deleteStudyPlan(req.user.id);
-        await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);
+app.post(PATH + '/courses/studyplan',
+    isLoggedIn,
+    body("studyPlan").notEmpty(),
+    body("studyPlan.*.code").isAlphanumeric().isLength({ min: 7, max: 7 }),
+    body("studyPlan.*.name").notEmpty(),
+    body("studyPlan.*.credits").isInt(),
+    body("studyPlan.*.enrolledStudents").isInt(),
+    body("studyPlan.*.maxStudents").isInt().optional({ nullable: true }),
+    body("studyPlan.*.preparatoryCourse").isAlphanumeric().isLength({ min: 7, max: 7 }).optional({ nullable: true }),
+    body("studyPlan.*.incompatibleCourses").isArray(),
+    isCorrect,
+    async (req, res) => {
+        try {
+            if (!validationResult(req).isEmpty()) {
+                return res.status(422).json("Validation of id failed");
+            }
+            await database.deleteStudyPlan(req.user.id);
+            await database.storeStudyPlan(req.body.studyPlan, req.body.workload, req.user.id);
 
-        return res.status(201).end();
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(503).json(err);
-    }
-});
+            return res.status(201).end();
+        }
+        catch (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
+    });
 
 app.delete(PATH + '/courses/studyplan', isLoggedIn, async (req, res) => {
     try {
@@ -226,7 +237,7 @@ app.get(PATH + '/studentInfo', isLoggedIn, async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status(503).json(err);
+        return res.status(500).json(err);
     }
 });
 
