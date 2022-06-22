@@ -70,11 +70,14 @@ function TableRow(props) {
                 setReason(`Course incompatible with ${incompatible.reduce((pre, cur) => pre + cur.code + ", ", '').slice(0, -2)}`);
                 setDisabled(true);
             }
-
-            if (!available) {
+            else if (!available) {
                 setReason('Maximun number of students has been reached');
                 setDisabled(true);
             }
+            else{
+                setDisabled(false);
+            }
+
             // !!incompatible ? setDisabled(true) : setDisabled(false);
             !!props.studyPlan.find((s) => s.code === props.course.code) ? setInserted(true) : setInserted(false);
         }
