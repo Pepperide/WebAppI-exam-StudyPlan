@@ -57,28 +57,25 @@ function TableRow(props) {
     const [collapsed, setCollapsed] = useState(true);
     const [inserted, setInserted] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const [reason, setReason] = useState('');
+    const [reason, setReason] = useState([]);
     const toggleCollapsed = () => { setCollapsed((old) => !old) };
 
     useEffect(() => {
-        setReason('');
+        setReason([]);
+        setDisabled(false);
         if (props.studyPlan) {
             const incompatible = props.studyPlan.filter((s) => props.course.incompatibleCourses.some((i) => i === s.code));
             const available = !!props.course.maxStudents ? props.course.enrolledStudents < props.course.maxStudents : true;
 
             if (incompatible.length > 0) {
-                setReason(`Course incompatible with ${incompatible.reduce((pre, cur) => pre + cur.code + ", ", '').slice(0, -2)}`);
+                setReason((old)=>[...old,`Course incompatible with ${incompatible.reduce((pre, cur) => pre + cur.code + ", ", '').slice(0, -2)}`]);
                 setDisabled(true);
             }
-            else if (!available) {
-                setReason('Maximun number of students has been reached');
+            if (!available) {
+                setReason((old)=>[...old,'Maximun number of students has been reached']);
                 setDisabled(true);
-            }
-            else{
-                setDisabled(false);
             }
 
-            // !!incompatible ? setDisabled(true) : setDisabled(false);
             !!props.studyPlan.find((s) => s.code === props.course.code) ? setInserted(true) : setInserted(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,7 +174,10 @@ function HiddenTable(props) {
     return (
         <>
             <Row>
-                {props.reason && <div style={{ color: "red" }}>{props.reason}</div>}
+                {/* {props.reason && <div style={{ color: "red" }}>{props.reason}</div>} */}
+                {props.reason
+                    .map((r)=><div key={props.reason.indexOf(r)} style={{ color: "red" }}>{r}</div>)
+                }
                 <Col>
                     <Table className="hidden-table" size="sm">
                         <thead>
